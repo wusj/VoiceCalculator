@@ -17,4 +17,5 @@
 <resources>
     <color name="magic_flame">#00ffffff</color>
     <color name="button_text">#ffffffff</color>
+    <color name="frame_back">#5A595A</color>
 </resources>
