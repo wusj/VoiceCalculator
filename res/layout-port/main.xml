@@ -35,6 +35,13 @@
                 <EditText style="@style/display_style" />
 
             </org.wolink.app.voicecalc.CalculatorDisplay>
+        <LinearLayout
+             android:layout_weight="1"
+             android:layout_width="match_parent"
+             android:layout_height="0dp"
+             android:layout_margin="4dp"
+			 android:background="@drawable/display">
+        </LinearLayout>            
 
     <org.wolink.app.voicecalc.PanelSwitcher
          android:id="@+id/panelswitch"
@@ -57,22 +64,22 @@
             <org.wolink.app.voicecalc.ColorButton
                 android:id="@+id/mul"
                 android:text="@string/mul"
-                style="@style/digit_button_style"
+                style="@style/button_style"
                 />
             <org.wolink.app.voicecalc.ColorButton
                 android:id="@+id/div"
                 android:text="@string/div"
-                style="@style/digit_button_style"
+                style="@style/button_style"
                 />
             <org.wolink.app.voicecalc.ColorButton
                 android:id="@+id/del"
                 android:text="@string/del"
-                style="@style/digit_button_style"
+                style="@style/red_button_style"
                 />
             <org.wolink.app.voicecalc.ColorButton
                 android:id="@+id/clear"
                 android:text="@string/clear"
-                style="@style/button_style"
+                style="@style/red_button_style"
                 />
         </LinearLayout>
 
@@ -84,17 +91,17 @@
             <org.wolink.app.voicecalc.ColorButton
                 android:id="@+id/digit7"
                 android:text="@string/digit7"
-                style="@style/digit_button_style"
+                style="@style/button_style"
                 />
             <org.wolink.app.voicecalc.ColorButton
                 android:id="@+id/digit8"
                 android:text="@string/digit8"
-                style="@style/digit_button_style"
+                style="@style/button_style"
                 />
             <org.wolink.app.voicecalc.ColorButton
                 android:id="@+id/digit9"
                 android:text="@string/digit9"
-                style="@style/digit_button_style"
+                style="@style/button_style"
                 />
             <org.wolink.app.voicecalc.ColorButton
                 android:id="@+id/minus"
@@ -121,17 +128,17 @@
              >            <org.wolink.app.voicecalc.ColorButton
                 android:id="@+id/digit4"
                 android:text="@string/digit4"
-                style="@style/digit_button_style"
+                style="@style/button_style"
                 />
             <org.wolink.app.voicecalc.ColorButton
                 android:id="@+id/digit5"
                 android:text="@string/digit5"
-                style="@style/digit_button_style"
+                style="@style/button_style"
                 />
             <org.wolink.app.voicecalc.ColorButton
                 android:id="@+id/digit6"
                 android:text="@string/digit6"
-                style="@style/digit_button_style"
+                style="@style/button_style"
                 />
         </LinearLayout>
 
@@ -143,12 +150,12 @@
             <org.wolink.app.voicecalc.ColorButton
                 android:id="@+id/digit1"
                 android:text="@string/digit1"
-                style="@style/digit_button_style"
+                style="@style/button_style"
                 />
             <org.wolink.app.voicecalc.ColorButton
                 android:id="@+id/digit2"
                 android:text="@string/digit2"
-                style="@style/digit_button_style"
+                style="@style/button_style"
                 />
             <org.wolink.app.voicecalc.ColorButton
                 android:id="@+id/digit3"
@@ -182,12 +189,12 @@
             <org.wolink.app.voicecalc.ColorButton
                 android:id="@+id/dot"
                 android:text="@string/dot"
-                style="@style/digit_button_style"
+                style="@style/button_style"
                 />
             <org.wolink.app.voicecalc.ColorButton
                 android:id="@+id/digit0"
                 android:text="@string/digit0"
-                style="@style/digit_button_style"
+                style="@style/button_style"
                 />
          </LinearLayout>
          <LinearLayout

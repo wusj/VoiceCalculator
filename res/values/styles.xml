@@ -6,12 +6,12 @@
        <item name="android:layout_height">match_parent</item>
        <item name="android:layout_weight">1</item>
        <item name="android:focusable">true</item>
-       <item name="android:background">@drawable/button</item>
-       <item name="android:layout_margin">4dp</item>
+       <item name="android:background">@drawable/normal_button</item>
+       <item name="android:layout_margin">2dp</item>
     </style>
 
-    <style name="digit_button_style" parent="button_style">
-       <item name="android:background">@drawable/blue_button</item>
+    <style name="red_button_style" parent="button_style">
+       <item name="android:background">@drawable/red_button</item>
     </style>
 
     <style name="button_small_style" parent="button_style">
