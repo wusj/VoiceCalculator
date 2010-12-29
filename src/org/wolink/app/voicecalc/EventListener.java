@@ -34,6 +34,9 @@ class EventListener implements View.OnKeyListener,
     //@Override
     public void onClick(View view) {
         int id = view.getId();
+        SoundManager sm = SoundManager.getInstance();
+        sm.playSound(((Button) view).getText().toString());
+        
         switch (id) {
         case R.id.del:
             mHandler.onDelete();
@@ -43,11 +46,9 @@ class EventListener implements View.OnKeyListener,
             mHandler.onEnter();
             break;
 
-            /*
         case R.id.clear:
             mHandler.onClear();
             break;
-            */
 
         default:
             if (view instanceof Button) {
@@ -83,8 +84,8 @@ class EventListener implements View.OnKeyListener,
         
         if (keyCode == KeyEvent.KEYCODE_DPAD_LEFT ||
             keyCode == KeyEvent.KEYCODE_DPAD_RIGHT) {
-            boolean eat = mHandler.eatHorizontalMove(keyCode == KeyEvent.KEYCODE_DPAD_LEFT);
-            return eat;
+            //boolean eat = mHandler.eatHorizontalMove(keyCode == KeyEvent.KEYCODE_DPAD_LEFT);
+            return false;
         }
 
         //Work-around for spurious key event from IME, bug #1639445

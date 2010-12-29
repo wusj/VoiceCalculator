@@ -103,7 +103,7 @@ class CalculatorDisplay extends ViewSwitcher {
 
         Editable.Factory factory = new CalculatorEditable.Factory(logic);
         for (int i = 0; i < 2; ++i) {
-            EditText text = (EditText) getChildAt(i);
+            TextView text = (TextView) getChildAt(i);
             text.setBackgroundDrawable(null);
             text.setEditableFactory(factory);
             text.setKeyListener(calculatorKeyListener);
@@ -130,17 +130,18 @@ class CalculatorDisplay extends ViewSwitcher {
     }
 
     void insert(String delta) {
-        EditText editor = (EditText) getCurrentView();
+        TextView editor = (TextView) getCurrentView();
         int cursor = editor.getSelectionStart();
-        editor.getText().insert(cursor, delta);
+        //editor.setText(editor.getText()+delta);
+        editor.getEditableText().insert(editor.getEditableText().length(), delta);
     }
 
-    EditText getEditText() {
-        return (EditText) getCurrentView();
-    }
+//    EditText getEditText() {
+//        return (EditText) getCurrentView();
+//    }
         
-    Editable getText() {
-        EditText text = (EditText) getCurrentView();
+    CharSequence getText() {
+        TextView text = (TextView) getCurrentView();
         return text.getText();
     }
     
@@ -160,22 +161,22 @@ class CalculatorDisplay extends ViewSwitcher {
             setOutAnimation(null);
         }
         
-        EditText editText = (EditText) getNextView();
+        TextView editText = (TextView) getNextView();
         editText.setText(text);
         //Calculator.log("selection to " + text.length() + "; " + text);
-        editText.setSelection(text.length());
+        //editText.setSelection(text.length());
         showNext();
     }
     
-    void setSelection(int i) {
-        EditText text = (EditText) getCurrentView();
-        text.setSelection(i);
-    }
-    
-    int getSelectionStart() {
-        EditText text = (EditText) getCurrentView();
-        return text.getSelectionStart();
-    }
+//    void setSelection(int i) {
+//        EditText text = (EditText) getCurrentView();
+//        text.setSelection(i);
+//    }
+//    
+//    int getSelectionStart() {
+//        EditText text = (EditText) getCurrentView();
+//        return text.getSelectionStart();
+//    }
     
     @Override
     protected void onFocusChanged(boolean gain, int direction, Rect prev) {

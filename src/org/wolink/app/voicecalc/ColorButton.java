@@ -22,6 +22,7 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Paint.Style;
 import android.util.AttributeSet;
+import android.view.HapticFeedbackConstants;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -50,6 +51,8 @@ class ColorButton extends Button implements OnClickListener {
     }
 
     public void onClick(View view) {
+    	view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY, 
+				HapticFeedbackConstants.FLAG_IGNORE_VIEW_SETTING | HapticFeedbackConstants.FLAG_IGNORE_GLOBAL_SETTING);
         mListener.onClick(this);
     }
 

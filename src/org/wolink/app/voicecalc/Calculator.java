@@ -25,7 +25,6 @@ import android.view.Display;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -51,10 +50,33 @@ public class Calculator extends Activity {
     private static final boolean LOG_ENABLED = DEBUG ? Config.LOGD : Config.LOGV;
     private static final String STATE_CURRENT_VIEW = "state-current-view";
 
+    SoundManager sm;
+    
     @Override
     public void onCreate(Bundle state) {
         super.onCreate(state);
-
+        
+        sm = SoundManager.getInstance();
+        sm.initSounds(this);
+        sm.addSound("1", R.raw.one, 250);
+        sm.addSound("2", R.raw.two, 280);
+        sm.addSound("3", R.raw.three, 350);
+        sm.addSound("4", R.raw.four, 300);
+        sm.addSound("5", R.raw.five, 270);
+        sm.addSound("6", R.raw.six, 260);
+        sm.addSound("7", R.raw.seven, 350);
+        sm.addSound("8", R.raw.eight, 270);
+        sm.addSound("9", R.raw.nine, 270);
+        sm.addSound("0", R.raw.zero, 340);
+        sm.addSound("AC", R.raw.ac, 460);
+        sm.addSound("DEL", R.raw.del, 580);
+        sm.addSound("+", R.raw.plus, 400);
+        sm.addSound(getString(R.string.minus), R.raw.minus, 320);
+        sm.addSound(getString(R.string.mul), R.raw.mul, 480);
+        sm.addSound(getString(R.string.div), R.raw.div, 460);
+        sm.addSound("=", R.raw.equal, 500);
+        sm.addSound(".", R.raw.dot, 290);
+        
         setContentView(R.layout.main);
 
         mPersist = new Persist(this);
@@ -73,11 +95,11 @@ public class Calculator extends Activity {
 
         mDisplay.setOnKeyListener(mListener);
 
-        View view;
-        if ((view = findViewById(R.id.del)) != null) {
+//        View view;
+//        if ((view = findViewById(R.id.del)) != null) {
 //            view.setOnClickListener(mListener);
-            view.setOnLongClickListener(mListener);
-        }
+//            view.setOnLongClickListener(mListener);
+//        }
         /*
         if ((view = findViewById(R.id.clear)) != null) {
             view.setOnClickListener(mListener);

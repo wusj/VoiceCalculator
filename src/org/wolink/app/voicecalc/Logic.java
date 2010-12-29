@@ -57,11 +57,11 @@ class Logic {
         mLineLength = nDigits;
     }
 
-    boolean eatHorizontalMove(boolean toLeft) {
-        EditText editText = mDisplay.getEditText();
-        int cursorPos = editText.getSelectionStart();
-        return toLeft ? cursorPos == 0 : cursorPos >= editText.length(); 
-    }
+//    boolean eatHorizontalMove(boolean toLeft) {
+//        EditText editText = mDisplay.getEditText();
+//        int cursorPos = editText.getSelectionStart();
+//        return toLeft ? cursorPos == 0 : cursorPos >= editText.length(); 
+//    }
 
     private String getText() {
         return mDisplay.getText().toString();
@@ -97,8 +97,7 @@ class Logic {
         String text = getText();
         return !mIsError &&
             (!mResult.equals(text) || 
-             isOperator(delta) ||
-             mDisplay.getSelectionStart() != text.length());
+             isOperator(delta));
     }
 
     void onDelete() {
