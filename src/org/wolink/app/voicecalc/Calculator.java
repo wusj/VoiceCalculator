@@ -16,7 +16,9 @@
 
 package org.wolink.app.voicecalc;
 
+import net.youmi.android.AdManager;
 import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.util.Config;
 import android.util.Log;
@@ -56,6 +58,14 @@ public class Calculator extends Activity {
     public void onCreate(Bundle state) {
         super.onCreate(state);
         
+        try{
+        	String version = this.getPackageManager().
+				getPackageInfo("org.wolink.app.voicecalc", 0).versionName;
+        	AdManager.init("be8e48d9d8eebbad", "729d721df3655af8", 30, false, version);  
+        }
+        catch (Throwable t) {
+        	
+        }
         sm = SoundManager.getInstance();
         sm.initSounds(this);
         sm.addSound("1", R.raw.one, 250);
