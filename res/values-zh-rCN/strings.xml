@@ -17,7 +17,6 @@
 <resources xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="app_name" msgid="8095131950334945205">"语音计算器"</string>
-    <string name="error" msgid="9197457880925804499">"出错"</string>
     <string name="digit0" msgid="8069590963464434135">"0"</string>
     <string name="digit1" msgid="8535041374797804029">"1"</string>
     <string name="digit2" msgid="8977354203154316247">"2"</string>
@@ -39,4 +38,10 @@
     <string name="basic" msgid="7691469861698059753">"基本面板"</string>
     <string name="advanced" msgid="7122495413742976492">"高级面板"</string>
     <string name="clear_history" msgid="8458043980601165012">"清除历史记录"</string>
+    <string name="setting">设置</string>
+    <string name="about">关于</string>
+    <string name="feedback">按键反馈</string>
+    <string name="voice">真人发声</string>
+    <string name="haptic">震动反馈</string>
+    
 </resources>

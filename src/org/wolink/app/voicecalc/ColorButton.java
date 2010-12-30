@@ -17,10 +17,12 @@
 package org.wolink.app.voicecalc;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Paint.Style;
+import android.preference.PreferenceManager;
 import android.util.AttributeSet;
 import android.view.HapticFeedbackConstants;
 import android.view.MotionEvent;
@@ -51,8 +53,17 @@ class ColorButton extends Button implements OnClickListener {
     }
 
     public void onClick(View view) {
-    	view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY, 
+    	SharedPreferences prefs=PreferenceManager.getDefaultSharedPreferences(this.getContext());
+    	boolean bVoice = prefs.getBoolean("voice_on", true);
+    	boolean bHaptic = prefs.getBoolean("haptic_on", true);
+    	if (bVoice) {
+    		SoundManager sm = SoundManager.getInstance();
+    		sm.playSound(((Button) view).getText().toString());
+    	}
+    	if (bHaptic) {
+    		view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY, 
 				HapticFeedbackConstants.FLAG_IGNORE_VIEW_SETTING | HapticFeedbackConstants.FLAG_IGNORE_GLOBAL_SETTING);
+    	}
         mListener.onClick(this);
     }
 

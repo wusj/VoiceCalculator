@@ -33,10 +33,7 @@ class EventListener implements View.OnKeyListener,
     
     //@Override
     public void onClick(View view) {
-        int id = view.getId();
-        SoundManager sm = SoundManager.getInstance();
-        sm.playSound(((Button) view).getText().toString());
-        
+        int id = view.getId();        
         switch (id) {
         case R.id.del:
             mHandler.onDelete();

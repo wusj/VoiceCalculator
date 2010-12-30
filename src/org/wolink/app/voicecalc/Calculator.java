@@ -18,8 +18,9 @@ package org.wolink.app.voicecalc;
 
 import net.youmi.android.AdManager;
 import android.app.Activity;
-import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Config;
 import android.util.Log;
 import android.util.TypedValue;
@@ -38,9 +39,11 @@ public class Calculator extends Activity {
     private Logic mLogic;
     private PanelSwitcher mPanelSwitcher;
 
-    private static final int CMD_CLEAR_HISTORY  = 1;
-    private static final int CMD_BASIC_PANEL    = 2;
-    private static final int CMD_ADVANCED_PANEL = 3;
+//    private static final int CMD_CLEAR_HISTORY  = 1;
+//    private static final int CMD_BASIC_PANEL    = 2;
+//    private static final int CMD_ADVANCED_PANEL = 3;
+    private static final int CMD_SETTINGS		  = 4;
+    private static final int CMD_ABOUT			  = 5;
 
     private static final int HVGA_WIDTH_PIXELS  = 320;
 
@@ -66,6 +69,8 @@ public class Calculator extends Activity {
         catch (Throwable t) {
         	
         }
+        PreferenceManager.setDefaultValues(this, R.xml.settings, false);
+        
         sm = SoundManager.getInstance();
         sm.initSounds(this);
         sm.addSound("1", R.raw.one, 250);
@@ -103,7 +108,7 @@ public class Calculator extends Activity {
 
         mListener.setHandler(mLogic, mPanelSwitcher);
 
-        mDisplay.setOnKeyListener(mListener);
+        //mDisplay.setOnKeyListener(mListener);
 
 //        View view;
 //        if ((view = findViewById(R.id.del)) != null) {
@@ -122,26 +127,34 @@ public class Calculator extends Activity {
         super.onCreateOptionsMenu(menu);
         MenuItem item;
         
-        item = menu.add(0, CMD_CLEAR_HISTORY, 0, R.string.clear_history);
-        item.setIcon(R.drawable.clear_history);
+//        item = menu.add(0, CMD_CLEAR_HISTORY, 0, R.string.clear_history);
+//        item.setIcon(R.drawable.clear_history);
+//        
+//        item = menu.add(0, CMD_ADVANCED_PANEL, 0, R.string.advanced);
+//        item.setIcon(R.drawable.advanced);
+//        
+//        item = menu.add(0, CMD_BASIC_PANEL, 0, R.string.basic);
+//        item.setIcon(R.drawable.simple);
         
-        item = menu.add(0, CMD_ADVANCED_PANEL, 0, R.string.advanced);
-        item.setIcon(R.drawable.advanced);
+      item = menu.add(0, CMD_SETTINGS, 0, R.string.setting);
+      item.setIcon(R.drawable.setting);
+      item.setIntent(new Intent(this, Settings.class));
+      
+      item = menu.add(0, CMD_ABOUT, 0, R.string.about);
+      item.setIcon(R.drawable.about);
+      item.setIntent(new Intent(this, About.class));
         
-        item = menu.add(0, CMD_BASIC_PANEL, 0, R.string.basic);
-        item.setIcon(R.drawable.simple);
-
-        return true;
+      return true;
     }
     
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
-        menu.findItem(CMD_BASIC_PANEL).setVisible(mPanelSwitcher != null && 
-                          mPanelSwitcher.getCurrentIndex() == ADVANCED_PANEL);
-        
-        menu.findItem(CMD_ADVANCED_PANEL).setVisible(mPanelSwitcher != null && 
-                          mPanelSwitcher.getCurrentIndex() == BASIC_PANEL);
+//        menu.findItem(CMD_BASIC_PANEL).setVisible(mPanelSwitcher != null && 
+//                          mPanelSwitcher.getCurrentIndex() == ADVANCED_PANEL);
+//        
+//        menu.findItem(CMD_ADVANCED_PANEL).setVisible(mPanelSwitcher != null && 
+//                          mPanelSwitcher.getCurrentIndex() == BASIC_PANEL);
         
         return true;
     }
@@ -149,23 +162,27 @@ public class Calculator extends Activity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-        case CMD_CLEAR_HISTORY:
-            mHistory.clear();
-            break;
-
-        case CMD_BASIC_PANEL:
-            if (mPanelSwitcher != null && 
-                mPanelSwitcher.getCurrentIndex() == ADVANCED_PANEL) {
-                mPanelSwitcher.moveRight();
-            }
-            break;
-
-        case CMD_ADVANCED_PANEL:
-            if (mPanelSwitcher != null && 
-                mPanelSwitcher.getCurrentIndex() == BASIC_PANEL) {
-                mPanelSwitcher.moveLeft();
-            }
-            break;
+//        case CMD_CLEAR_HISTORY:
+//            mHistory.clear();
+//            break;
+//
+//        case CMD_BASIC_PANEL:
+//            if (mPanelSwitcher != null && 
+//                mPanelSwitcher.getCurrentIndex() == ADVANCED_PANEL) {
+//                mPanelSwitcher.moveRight();
+//            }
+//            break;
+//
+//        case CMD_ADVANCED_PANEL:
+//            if (mPanelSwitcher != null && 
+//                mPanelSwitcher.getCurrentIndex() == BASIC_PANEL) {
+//                mPanelSwitcher.moveLeft();
+//            }
+//            break;
+        case CMD_SETTINGS:
+        	break;
+        case CMD_ABOUT:
+        	break;
         }
         return super.onOptionsItemSelected(item);
     }

@@ -21,9 +21,10 @@ import org.javia.arity.SyntaxException;
 import org.javia.arity.Util;
 
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.view.KeyEvent;
 import android.widget.Button;
-import android.widget.EditText;
 
 class Logic {
     private CalculatorDisplay mDisplay;
@@ -104,7 +105,8 @@ class Logic {
         if (getText().equals(mResult) || mIsError) {
             clear(false);
         } else {
-            mDisplay.dispatchKeyEvent(new KeyEvent(0, KeyEvent.KEYCODE_DEL));
+        	mDisplay.setText(getText().substring(0, getText().length() - 1), CalculatorDisplay.Scroll.NONE);
+            //mDisplay.dispatchKeyEvent(new KeyEvent(0, KeyEvent.KEYCODE_DEL));
             mResult = "";
         }
     }
@@ -131,6 +133,18 @@ class Logic {
             } else {
                 setText(mResult);
                 //mEqualButton.setText(mEnterString);
+                if (!mIsError) {
+                	SharedPreferences prefs=PreferenceManager.getDefaultSharedPreferences(mDisplay.getContext());
+                	boolean bVoice = prefs.getBoolean("voice_on", true);
+                	if (bVoice) {
+                		SoundManager sm = SoundManager.getInstance();
+                		String[] keys = new String[mResult.length()];
+                		for(int i = 0; i < mResult.length(); i++) {
+                			keys[i] = String.valueOf(mResult.charAt(i));
+                		}
+                		sm.playSeqSounds(keys);
+                	}
+                }
             }
         }
     }

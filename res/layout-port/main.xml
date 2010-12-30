@@ -31,13 +31,8 @@
  		  <LinearLayout
  		   android:layout_width="fill_parent"  
 		   android:layout_height="fill_parent"
-		   android:background="#808080" 		  
+		   android:background="@android:drawable/title_bar" 		  
  		  >
- 		  	<ImageView
- 		   	android:layout_width="wrap_content"  
-		   	android:layout_height="wrap_content"
-		    android:src="@drawable/icon"   		  	
- 		  	/>
  		  	<TextView
   		   	android:layout_width="0dp"  
 		   	android:layout_height="fill_parent"
@@ -45,9 +40,8 @@
 		   	android:text="@string/app_name"	
 		   	android:gravity="center"	  	
 		   	android:textSize="30sp"
-		   	android:textColor="#fff"
  		  	/>
- 		  </LinearLayout>
+ 		  </LinearLayout> 
 		  <net.youmi.android.AdView
 		   android:id="@+id/adView"  
 		   android:layout_width="fill_parent"  

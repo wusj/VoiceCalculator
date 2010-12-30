@@ -16,6 +16,7 @@ public class SoundManager {
     private Handler mHandler = new Handler();
     private Vector<String> mSoundQueue = new Vector<String>();
     private int curStreamId;
+    private boolean mPlaying;
     static private SoundManager _instance;
 
     /**
@@ -55,6 +56,7 @@ public class SoundManager {
         mSoundPoolMap = new HashMap<String, Sound>();
         mAudioManager = (AudioManager) mContext
                 .getSystemService(Context.AUDIO_SERVICE);
+        mPlaying = false;
     }
 
     /**
@@ -96,11 +98,12 @@ public class SoundManager {
 	 * @throws InterruptedException
 	 */
     public void playSeqSounds(String keys[]) {
-    	stopSound();
+    	//stopSound();
     	for(String key : keys) {
     		mSoundQueue.add(key);
     	}
-    	playNextSound();
+    	if (!mPlaying)
+    		playNextSound();
     }
 
     /**
@@ -110,6 +113,7 @@ public class SoundManager {
     	mHandler.removeCallbacks(mPlayNext);
     	mSoundQueue.clear();
         mSoundPool.stop(curStreamId);
+        mPlaying = false;
     }
 
     /**
@@ -138,7 +142,7 @@ public class SoundManager {
 		        streamVolume /= mAudioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
 		        
 		        curStreamId = mSoundPool.play(sound.id, streamVolume, streamVolume, 1, 0, 1.0f); 
-		        
+		        mPlaying = true;
 		        mHandler.postDelayed(mPlayNext, sound.time);
 	    	}
 	    	else {
