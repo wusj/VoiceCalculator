@@ -18,7 +18,9 @@ package org.wolink.app.voicecalc;
 
 import net.youmi.android.AdManager;
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Config;
@@ -73,6 +75,9 @@ public class Calculator extends Activity {
         
         sm = SoundManager.getInstance();
         sm.initSounds(this);
+        
+        /*
+        
         sm.addSound("1", R.raw.one, 250);
         sm.addSound("2", R.raw.two, 280);
         sm.addSound("3", R.raw.three, 350);
@@ -91,6 +96,7 @@ public class Calculator extends Activity {
         sm.addSound(getString(R.string.div), R.raw.div, 460);
         sm.addSound("=", R.raw.equal, 500);
         sm.addSound(".", R.raw.dot, 290);
+        */
         
         setContentView(R.layout.main);
 
@@ -120,6 +126,8 @@ public class Calculator extends Activity {
             view.setOnClickListener(mListener);
         }
         */
+        
+        new SoundLoadTask().execute(sm);
     }
 
     @Override
@@ -229,4 +237,44 @@ public class Calculator extends Activity {
         float ratio = (float)h/HVGA_WIDTH_PIXELS;
         view.setTextSize(TypedValue.COMPLEX_UNIT_PX, fontPixelSize*ratio);
     }
+    
+    
+	class SoundLoadTask extends AsyncTask<SoundManager, Void, Void> {  
+		ProgressDialog dialog;
+		
+		@Override  
+		protected void onPreExecute() {  
+			dialog = ProgressDialog.show(Calculator.this, "", 
+					Calculator.this.getString(R.string.loadingvoice), true);
+			dialog.setCancelable(false);
+		}  		
+		
+		@Override
+		protected Void doInBackground(SoundManager... sm) {  	        
+	        sm[0].addSound("1", R.raw.one, 250);
+	        sm[0].addSound("2", R.raw.two, 280);
+	        sm[0].addSound("3", R.raw.three, 350);
+	        sm[0].addSound("4", R.raw.four, 300);
+	        sm[0].addSound("5", R.raw.five, 270);
+	        sm[0].addSound("6", R.raw.six, 260);
+	        sm[0].addSound("7", R.raw.seven, 350);
+	        sm[0].addSound("8", R.raw.eight, 270);
+	        sm[0].addSound("9", R.raw.nine, 270);
+	        sm[0].addSound("0", R.raw.zero, 340);
+	        sm[0].addSound("AC", R.raw.ac, 460);
+	        sm[0].addSound("DEL", R.raw.del, 580);
+	        sm[0].addSound("+", R.raw.plus, 400);
+	        sm[0].addSound(getString(R.string.minus), R.raw.minus, 320);
+	        sm[0].addSound(getString(R.string.mul), R.raw.mul, 480);
+	        sm[0].addSound(getString(R.string.div), R.raw.div, 460);
+	        sm[0].addSound("=", R.raw.equal, 500);
+	        sm[0].addSound(".", R.raw.dot, 290);
+	        return null;
+		}  
+		
+		@Override  
+		protected void onPostExecute(Void n) {  
+			dialog.dismiss();
+		} 
+	}  
 }

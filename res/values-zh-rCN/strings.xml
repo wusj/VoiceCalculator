@@ -43,5 +43,5 @@
     <string name="feedback">按键反馈</string>
     <string name="voice">真人发声</string>
     <string name="haptic">震动反馈</string>
-    
+    <string name="loadingvoice">正在加载语音包...</string>
 </resources>
