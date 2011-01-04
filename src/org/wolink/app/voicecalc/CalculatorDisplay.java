@@ -17,17 +17,16 @@
 package org.wolink.app.voicecalc;
 
 import android.content.Context;
+import android.graphics.Paint;
+import android.graphics.Rect;
 import android.text.Editable;
+import android.text.InputType;
 import android.text.Spanned;
 import android.text.method.NumberKeyListener;
 import android.util.AttributeSet;
 import android.view.animation.TranslateAnimation;
-import android.text.InputType;
-import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.ViewSwitcher;
-import android.graphics.Rect;
-import android.graphics.Paint;
 
 /**
  * Provides vertical scrolling for the input/result EditText.
@@ -131,7 +130,7 @@ class CalculatorDisplay extends ViewSwitcher {
 
     void insert(String delta) {
         TextView editor = (TextView) getCurrentView();
-        int cursor = editor.getSelectionStart();
+        //int cursor = editor.getSelectionStart();
         //editor.setText(editor.getText()+delta);
         editor.getEditableText().insert(editor.getEditableText().length(), delta);
     }

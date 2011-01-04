@@ -23,7 +23,6 @@ import org.javia.arity.Util;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
-import android.view.KeyEvent;
 import android.widget.Button;
 
 class Logic {
@@ -64,7 +63,7 @@ class Logic {
 //        return toLeft ? cursorPos == 0 : cursorPos >= editText.length(); 
 //    }
 
-    private String getText() {
+    public String getText() {
         return mDisplay.getText().toString();
     }
 
@@ -133,18 +132,6 @@ class Logic {
             } else {
                 setText(mResult);
                 //mEqualButton.setText(mEnterString);
-                if (!mIsError) {
-                	SharedPreferences prefs=PreferenceManager.getDefaultSharedPreferences(mDisplay.getContext());
-                	boolean bVoice = prefs.getBoolean("voice_on", true);
-                	if (bVoice) {
-                		SoundManager sm = SoundManager.getInstance();
-                		String[] keys = new String[mResult.length()];
-                		for(int i = 0; i < mResult.length(); i++) {
-                			keys[i] = String.valueOf(mResult.charAt(i));
-                		}
-                		sm.playSeqSounds(keys);
-                	}
-                }
             }
         }
     }

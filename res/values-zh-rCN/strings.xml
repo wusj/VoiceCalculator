@@ -44,4 +44,7 @@
     <string name="voice">真人发声</string>
     <string name="haptic">震动反馈</string>
     <string name="loadingvoice">正在加载语音包...</string>
+    <string name="voice_pkg">语音包</string>
+    <string name="default_voice">默认</string>
+    <string name="select_voice">选择语音包</string>
 </resources>

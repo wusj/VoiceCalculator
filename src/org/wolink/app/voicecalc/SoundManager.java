@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Vector;
 
 import android.content.Context;
+import android.content.res.AssetFileDescriptor;
 import android.media.AudioManager;
 import android.media.SoundPool;
 import android.os.Handler;
@@ -76,11 +77,10 @@ public class SoundManager {
      * @param key the key we need to get the sound later
      * @param afd  the file store in the asset
      */
-//    public void addSound(String key, AssetFileDescriptor afd) {
-//        mSoundPoolMap.put(key, mSoundPool.load(
-//                afd.getFileDescriptor(),
-//                afd.getStartOffset(), afd.getLength(), 1));
-//    }
+    public void addSound(String key, AssetFileDescriptor afd, int time) {
+    	Sound sound = new Sound(mSoundPool.load(afd, 1), time);
+        mSoundPoolMap.put(key, sound);
+    }
    
     /**
      * play the sound loaded to the SoundPool by the key we set
@@ -116,19 +116,23 @@ public class SoundManager {
         mPlaying = false;
     }
 
-    /**
-     * Deallocates the resources and Instance of SoundManager
-     */
-    public void cleanup() {
+    public void unloadAll() {
     	stopSound();
         if (mSoundPoolMap.size() > 0) {
             for (String key : mSoundPoolMap.keySet()) {
                 mSoundPool.unload(mSoundPoolMap.get(key).id);
             }
         }
+        mSoundPoolMap.clear();   	
+    }
+    
+    /**
+     * Deallocates the resources and Instance of SoundManager
+     */
+    public void cleanup() {
+    	unloadAll();
         mSoundPool.release();
         mSoundPool = null;
-        mSoundPoolMap.clear();
         _instance = null;
     }
 

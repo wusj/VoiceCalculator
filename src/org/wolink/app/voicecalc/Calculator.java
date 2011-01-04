@@ -16,10 +16,20 @@
 
 package org.wolink.app.voicecalc;
 
+import java.util.List;
+
 import net.youmi.android.AdManager;
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.content.pm.ProviderInfo;
+import android.content.pm.ResolveInfo;
+import android.content.res.AssetFileDescriptor;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -57,7 +67,8 @@ public class Calculator extends Activity {
     private static final boolean LOG_ENABLED = DEBUG ? Config.LOGD : Config.LOGV;
     private static final String STATE_CURRENT_VIEW = "state-current-view";
 
-    SoundManager sm;
+    private SoundManager sm;
+     private String mVoicePkg;
     
     @Override
     public void onCreate(Bundle state) {
@@ -71,33 +82,12 @@ public class Calculator extends Activity {
         catch (Throwable t) {
         	
         }
-        PreferenceManager.setDefaultValues(this, R.xml.settings, false);
+
+    	mVoicePkg = "";
         
         sm = SoundManager.getInstance();
         sm.initSounds(this);
-        
-        /*
-        
-        sm.addSound("1", R.raw.one, 250);
-        sm.addSound("2", R.raw.two, 280);
-        sm.addSound("3", R.raw.three, 350);
-        sm.addSound("4", R.raw.four, 300);
-        sm.addSound("5", R.raw.five, 270);
-        sm.addSound("6", R.raw.six, 260);
-        sm.addSound("7", R.raw.seven, 350);
-        sm.addSound("8", R.raw.eight, 270);
-        sm.addSound("9", R.raw.nine, 270);
-        sm.addSound("0", R.raw.zero, 340);
-        sm.addSound("AC", R.raw.ac, 460);
-        sm.addSound("DEL", R.raw.del, 580);
-        sm.addSound("+", R.raw.plus, 400);
-        sm.addSound(getString(R.string.minus), R.raw.minus, 320);
-        sm.addSound(getString(R.string.mul), R.raw.mul, 480);
-        sm.addSound(getString(R.string.div), R.raw.div, 460);
-        sm.addSound("=", R.raw.equal, 500);
-        sm.addSound(".", R.raw.dot, 290);
-        */
-        
+              
         setContentView(R.layout.main);
 
         mPersist = new Persist(this);
@@ -125,9 +115,7 @@ public class Calculator extends Activity {
         if ((view = findViewById(R.id.clear)) != null) {
             view.setOnClickListener(mListener);
         }
-        */
-        
-        new SoundLoadTask().execute(sm);
+        */        
     }
 
     @Override
@@ -207,7 +195,23 @@ public class Calculator extends Activity {
         mLogic.updateHistory();
         mPersist.save();
     }
-
+    
+    @Override
+    public void onResume() {
+        super.onResume();
+        PreferenceManager.setDefaultValues(this, R.xml.settings, false);
+    	SharedPreferences prefs=PreferenceManager.getDefaultSharedPreferences(this);
+    	boolean bVoiceOn = prefs.getBoolean("voice_on", true);
+    	boolean bHapticOn = prefs.getBoolean("haptic_on", true);
+    	String pkg = prefs.getString("voice_pkg", "default");
+    	mListener.mbVoice = bVoiceOn;
+    	mListener.mbHaptic = bHapticOn;
+    	if (bVoiceOn && !pkg.equals(mVoicePkg)) {
+    		mVoicePkg = pkg;
+    		new SoundLoadTask(this).execute(sm);
+    	}
+    }
+    
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent keyEvent) {
         if (keyCode == KeyEvent.KEYCODE_BACK 
@@ -241,34 +245,92 @@ public class Calculator extends Activity {
     
 	class SoundLoadTask extends AsyncTask<SoundManager, Void, Void> {  
 		ProgressDialog dialog;
+		Calculator context;
+		
+		SoundLoadTask(Context context) {
+			super();
+			this.context = (Calculator)context;
+		}
 		
 		@Override  
 		protected void onPreExecute() {  
-			dialog = ProgressDialog.show(Calculator.this, "", 
-					Calculator.this.getString(R.string.loadingvoice), true);
+			dialog = ProgressDialog.show(context, "", 
+					context.getString(R.string.loadingvoice), true);
 			dialog.setCancelable(false);
 		}  		
 		
 		@Override
-		protected Void doInBackground(SoundManager... sm) {  	        
-	        sm[0].addSound("1", R.raw.one, 250);
-	        sm[0].addSound("2", R.raw.two, 280);
-	        sm[0].addSound("3", R.raw.three, 350);
-	        sm[0].addSound("4", R.raw.four, 300);
-	        sm[0].addSound("5", R.raw.five, 270);
-	        sm[0].addSound("6", R.raw.six, 260);
-	        sm[0].addSound("7", R.raw.seven, 350);
-	        sm[0].addSound("8", R.raw.eight, 270);
-	        sm[0].addSound("9", R.raw.nine, 270);
-	        sm[0].addSound("0", R.raw.zero, 340);
-	        sm[0].addSound("AC", R.raw.ac, 460);
-	        sm[0].addSound("DEL", R.raw.del, 580);
-	        sm[0].addSound("+", R.raw.plus, 400);
-	        sm[0].addSound(getString(R.string.minus), R.raw.minus, 320);
-	        sm[0].addSound(getString(R.string.mul), R.raw.mul, 480);
-	        sm[0].addSound(getString(R.string.div), R.raw.div, 460);
-	        sm[0].addSound("=", R.raw.equal, 500);
-	        sm[0].addSound(".", R.raw.dot, 290);
+		protected Void doInBackground(SoundManager... sm) { 
+			sm[0].unloadAll();
+	        PackageManager pm = getPackageManager();
+	        List<ProviderInfo> list = null;
+	        if (!context.mVoicePkg.equals("default")) { 
+	        	list = pm.queryContentProviders("org.wolink.app.voicecalc", 
+	        		context.getApplicationInfo().uid, 0);
+	        }
+	        
+	        Cursor cursor = null;
+	        String pkgName = null;
+	        if (list != null) {        
+		        String authority = null;
+		        
+		        for (int i = 0; i < list.size(); i++) {
+		        	ProviderInfo info = list.get(i);
+		        	if (context.mVoicePkg.equals(info.authority)) {
+		        		pkgName = info.packageName;
+		        		authority = info.authority;
+		        	}
+		        }
+		        
+		        if (authority != null) {
+		        	cursor = ((Activity)context).managedQuery(
+						Uri.parse("content://" + authority + "/voices"), 
+						null, null, null, null);
+		        }
+	        }
+			
+			if (cursor != null && cursor.moveToFirst()) {
+				int keyColumn = cursor.getColumnIndex("key");
+				int resIdColumn = cursor.getColumnIndex("resId");
+				int timeColumn = cursor.getColumnIndex("time");
+				String key;
+				int resId;
+				int time;
+				do {
+					key = cursor.getString(keyColumn);
+					resId = cursor.getInt(resIdColumn);
+					time = cursor.getInt(timeColumn);
+					try {
+						AssetFileDescriptor afd = context.getContentResolver().openAssetFileDescriptor(
+							Uri.parse("android.resource://" + pkgName + "/" + resId),
+							"r"
+							);
+						sm[0].addSound(key, afd, time);
+					}
+					catch (Throwable t) {
+						// Nothing
+					}
+				} while (cursor.moveToNext());
+			} else {
+		        sm[0].addSound("1", R.raw.one, 250);
+		        sm[0].addSound("2", R.raw.two, 280);
+		        sm[0].addSound("3", R.raw.three, 350);
+		        sm[0].addSound("4", R.raw.four, 300);
+		        sm[0].addSound("5", R.raw.five, 270);
+		        sm[0].addSound("6", R.raw.six, 260);
+		        sm[0].addSound("7", R.raw.seven, 350);
+		        sm[0].addSound("8", R.raw.eight, 270);
+		        sm[0].addSound("9", R.raw.nine, 270);
+		        sm[0].addSound("0", R.raw.zero, 340);
+		        sm[0].addSound("AC", R.raw.ac, 460);
+		        sm[0].addSound("DEL", R.raw.del, 580);
+		        sm[0].addSound("+", R.raw.plus, 400);
+		        sm[0].addSound(getString(R.string.minus), R.raw.minus, 320);
+		        sm[0].addSound(getString(R.string.mul), R.raw.mul, 480);
+		        sm[0].addSound(getString(R.string.div), R.raw.div, 460);
+		        sm[0].addSound("=", R.raw.equal, 500);
+		        sm[0].addSound(".", R.raw.dot, 290);
+			}
 	        return null;
 		}  
 		

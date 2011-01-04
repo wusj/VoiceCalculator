@@ -16,6 +16,9 @@
 
 package org.wolink.app.voicecalc;
 
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
+import android.view.HapticFeedbackConstants;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
@@ -25,14 +28,27 @@ class EventListener implements View.OnKeyListener,
                                View.OnLongClickListener {
     Logic mHandler;
     PanelSwitcher mPanelSwitcher;
+    boolean mbVoice;
+    boolean mbHaptic;
     
     void setHandler(Logic handler, PanelSwitcher panelSwitcher) {
         mHandler = handler;
         mPanelSwitcher = panelSwitcher;
+        mbVoice = true;
+        mbHaptic = true;
     }
     
     //@Override
     public void onClick(View view) {
+    	if (mbVoice) {
+    		SoundManager sm = SoundManager.getInstance();
+    		sm.playSound(((Button) view).getText().toString());
+    	}
+    	if (mbHaptic) {
+    		view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY, 
+				HapticFeedbackConstants.FLAG_IGNORE_VIEW_SETTING | HapticFeedbackConstants.FLAG_IGNORE_GLOBAL_SETTING);
+    	}
+    	
         int id = view.getId();        
         switch (id) {
         case R.id.del:
@@ -41,7 +57,16 @@ class EventListener implements View.OnKeyListener,
 
         case R.id.equal:
             mHandler.onEnter();
-            break;
+            if (mbVoice) {
+            	SoundManager sm = SoundManager.getInstance();
+            	String result = mHandler.getText().toString();
+            	String[] keys = new String[result.length()];
+            	for(int i = 0; i < result.length(); i++) {
+            		keys[i] = String.valueOf(result.charAt(i));
+            	}
+            	sm.playSeqSounds(keys);
+            }
+           break;
 
         case R.id.clear:
             mHandler.onClear();

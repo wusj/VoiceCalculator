@@ -101,4 +101,7 @@
     <string name="app_title">%s v%s</string>
     <string name="about_text">Android平台适用\n\n©沃林克软件工作室\n版权所有\n\n官网：<a href="http://sw.wolink.org/">http://sw.wolink.org</a>\n</string>
     <string name="about_note">* 本软件使用完全免费，使用过程中产生的网络流量费用由网络运营商收取。</string>    
+    <string name="voice_pkg">Voice Package</string>
+    <string name="default_voice">Default</string>
+    <string name="select_voice">Select Voice Package</string>
 </resources>
