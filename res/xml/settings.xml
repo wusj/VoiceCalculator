@@ -18,9 +18,18 @@ android:summary="@string/hapticsummary"
 <PreferenceCategory android:title="@string/voice_pkg">
         <ListPreference
                 android:key="voice_pkg"
+                android:title="@string/voice_setting"
                 android:defaultValue="default"
                 android:dependency="voice_on"
                 android:dialogTitle="@string/select_voice" 
         />
+         <PreferenceScreen
+                android:title="@string/download"
+                android:summary="@string/download_summary">
+
+            <intent android:action="android.intent.action.VIEW"
+                    android:data="http://sw.wolink.org/?p=31" />
+
+        </PreferenceScreen>
 </PreferenceCategory>
 </PreferenceScreen>

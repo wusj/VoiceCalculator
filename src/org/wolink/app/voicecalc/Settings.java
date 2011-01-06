@@ -6,9 +6,11 @@ import android.content.pm.PackageManager;
 import android.content.pm.ProviderInfo;
 import android.os.Bundle;
 import android.preference.ListPreference;
+import android.preference.Preference;
 import android.preference.PreferenceActivity;
+import android.preference.Preference.OnPreferenceChangeListener;
 
-public class Settings extends PreferenceActivity {
+public class Settings extends PreferenceActivity implements OnPreferenceChangeListener{
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		addPreferencesFromResource(R.xml.settings);
@@ -39,6 +41,31 @@ public class Settings extends PreferenceActivity {
         
         pref.setEntries(entries);	
         pref.setEntryValues(entryValues);
-		pref.setTitle("Voice Package");
+        
+        voice = pref.getValue();
+        for (int i = 0; i < count + 1; i++) {
+        	if (voice.equals(entryValues[i])) {
+        		pref.setSummary(entries[i]);
+        		break;
+        	}
+        }
+        pref.setOnPreferenceChangeListener(this);
+	}
+
+	@Override
+	public boolean onPreferenceChange(Preference preference, Object newValue) {
+		ListPreference pref = (ListPreference)preference;
+        CharSequence[] entries = pref.getEntries();
+        CharSequence[] entryValues = pref.getEntryValues();
+        CharSequence voice = (CharSequence)newValue;
+        
+        for (int i = 0; i < entries.length; i++) {
+        	if (voice.equals(entryValues[i])) {
+        		pref.setSummary(entries[i]);
+        		break;
+        	}
+        }
+        
+		return true;
 	}	
 }

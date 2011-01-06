@@ -47,4 +47,7 @@
     <string name="voice_pkg">语音包</string>
     <string name="default_voice">默认</string>
     <string name="select_voice">选择语音包</string>
+    <string name="download">下载</string>
+    <string name="download_summary">浏览官方网站下载更多语音包</string>
+    <string name="voice_setting">语音设置</string>   
 </resources>
