@@ -25,6 +25,7 @@
               android:layout_height="match_parent"
               android:background="@color/frame_back">
 		<FrameLayout
+ 		   android:id="@+id/title_bar"
                  android:layout_width="match_parent"
                  android:layout_height="48dp"
  		>
@@ -50,22 +51,50 @@
 		   umadsdk:backgroundTransparent="255"
 		   umadsdk:backgroundColor="#808080" 
 		   /> 
+			<View
+			android:id="@+id/btn_closeAds"
+			android:layout_width="fill_parent"
+			android:layout_height="fill_parent"
+			android:visibility="invisible"	
+			/>
  		</FrameLayout>
+ 		<FrameLayout 
+ 			android:layout_width="match_parent"
+ 			android:layout_height="0dp"
+ 			android:layout_weight="1"
+ 			>
+ 			<LinearLayout
+ 			android:layout_width="match_parent"
+ 			android:layout_height="match_parent"
+ 			android:padding="4dp"
+ 			>
             <org.wolink.app.voicecalc.CalculatorDisplay
                  android:id="@+id/display"
                  android:layout_width="match_parent"
-                 android:layout_height="0dp"
-                 android:layout_weight="1"
-                 android:layout_margin="4dp"
-                 android:padding="4dp"
+                 android:layout_height="match_parent"
+                 android:paddingTop="4dp"
+                 android:paddingRight="4dp"
                  android:background="@drawable/display"
                  >
 
                 <TextView style="@style/display_style" />
                 <TextView style="@style/display_style" />
 
-            </org.wolink.app.voicecalc.CalculatorDisplay>       
- 
+            </org.wolink.app.voicecalc.CalculatorDisplay>   
+            </LinearLayout>    
+		<TextView 
+		    android:id="@+id/btn_adsinfo"
+			android:layout_width="match_parent"
+			android:layout_height="14px"	
+			android:gravity="center"
+			android:textSize="12px"
+			android:text="@string/ads_info"	
+			android:layout_weight="0"	
+			android:layout_alignParentBottom="true"
+			android:background="#60000000"
+			android:visibility="invisible"	
+		/>
+ 		</FrameLayout>
     <org.wolink.app.voicecalc.PanelSwitcher
          android:id="@+id/panelswitch"
          android:layout_width="match_parent"

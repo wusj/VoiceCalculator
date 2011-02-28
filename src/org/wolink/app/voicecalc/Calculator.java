@@ -16,8 +16,10 @@
 
 package org.wolink.app.voicecalc;
 
+import java.util.Calendar;
 import java.util.List;
 
+import net.youmi.android.AdListener;
 import net.youmi.android.AdManager;
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -31,6 +33,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.util.Config;
 import android.util.Log;
@@ -39,10 +42,13 @@ import android.view.Display;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
 
-public class Calculator extends Activity {
+public class Calculator extends Activity implements AdListener, OnClickListener {
     EventListener mListener = new EventListener();
     private CalculatorDisplay mDisplay;
     private Persist mPersist;
@@ -67,7 +73,13 @@ public class Calculator extends Activity {
     private static final String STATE_CURRENT_VIEW = "state-current-view";
 
     private SoundManager sm;
-     private String mVoicePkg;
+    private String mVoicePkg;
+     
+    private ViewGroup title_bar; 
+    private boolean have_ad;
+    private View btn_closeAds;
+    private View btn_adsinfo;
+    private net.youmi.android.AdView adView;
     
     @Override
     public void onCreate(Bundle state) {
@@ -88,6 +100,15 @@ public class Calculator extends Activity {
         sm.initSounds(this);
               
         setContentView(R.layout.main);
+        
+        adView = (net.youmi.android.AdView)findViewById(R.id.adView);
+        adView.setAdListener(this);
+        title_bar = (ViewGroup)findViewById(R.id.title_bar);
+        have_ad = false;
+        btn_closeAds = findViewById(R.id.btn_closeAds);
+        btn_closeAds.setOnClickListener(this);
+        btn_adsinfo = findViewById(R.id.btn_adsinfo);
+        btn_adsinfo.setOnClickListener(this);
 
         mPersist = new Persist(this);
         mHistory = mPersist.history;
@@ -200,6 +221,26 @@ public class Calculator extends Activity {
         super.onResume();
         PreferenceManager.setDefaultValues(this, R.xml.settings, false);
     	SharedPreferences prefs=PreferenceManager.getDefaultSharedPreferences(this);
+    	
+        boolean ads = prefs.getBoolean("ads", false);
+        if (ads) {
+        	int year = prefs.getInt("year", 2000);
+        	int month = prefs.getInt("month", 1);
+        	int day = prefs.getInt("day", 1);
+            final Calendar c = Calendar.getInstance();
+            int curYear = c.get(Calendar.YEAR); //获取当前年份
+            int curMonth = c.get(Calendar.MONTH);//获取当前月份
+            int curDay = c.get(Calendar.DAY_OF_MONTH);//获取当前月份的日期号码
+            if (year == curYear && month == curMonth && day == curDay){
+            	ads = true;
+            } else {
+            	ads = false;
+            }
+        }  	
+        if (ads) {
+        	title_bar.removeViewAt(1);
+        }
+    	
     	boolean bVoiceOn = prefs.getBoolean("voice_on", true);
     	boolean bHapticOn = prefs.getBoolean("haptic_on", true);
     	String pkg = prefs.getString("voice_pkg", "default");
@@ -241,6 +282,43 @@ public class Calculator extends Activity {
         view.setTextSize(TypedValue.COMPLEX_UNIT_PX, fontPixelSize*ratio);
     }
     
+    
+    public void onClick(View v) {
+    	btn_closeAds.setVisibility(View.INVISIBLE);
+    	btn_adsinfo.setVisibility(View.INVISIBLE);
+     	adView.getChildAt(0).performClick();
+        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
+        SharedPreferences.Editor editor = settings.edit();
+        editor.putBoolean("ads", true);
+        final Calendar c = Calendar.getInstance();
+        editor.putInt("year", c.get(Calendar.YEAR));
+        editor.putInt("month", c.get(Calendar.MONTH));
+        editor.putInt("day",c.get(Calendar.DAY_OF_MONTH));
+        editor.commit();
+        title_bar.removeViewAt(1);
+    }
+
+	private Handler mUpdateAdsHandler = new Handler();
+	private Runnable mUpdateAdsArea = new Runnable() {
+		   public void run() {
+			   btn_closeAds.setVisibility(View.VISIBLE);
+			   btn_adsinfo.setVisibility(View.VISIBLE);
+		   }
+	};
+
+    public void onReceiveAd()
+    {
+    	if (!have_ad)
+    	{
+    		have_ad = true;
+    		mUpdateAdsHandler.post(mUpdateAdsArea);
+    	}
+    }
+    
+    // Method descriptor #3 ()V
+    public void onConnectFailed()
+    {
+    }
     
 	class SoundLoadTask extends AsyncTask<SoundManager, Void, Void> {  
 		ProgressDialog dialog;
