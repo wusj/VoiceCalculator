@@ -75,7 +75,7 @@ public class Calculator extends Activity implements AdListener, OnClickListener 
     private SoundManager sm;
     private String mVoicePkg;
      
-    private ViewGroup title_bar; 
+//    private ViewGroup title_bar; 
     private boolean have_ad;
     private View btn_closeAds;
     private View btn_adsinfo;
@@ -103,7 +103,7 @@ public class Calculator extends Activity implements AdListener, OnClickListener 
         
         adView = (net.youmi.android.AdView)findViewById(R.id.adView);
         adView.setAdListener(this);
-        title_bar = (ViewGroup)findViewById(R.id.title_bar);
+//        title_bar = (ViewGroup)findViewById(R.id.title_bar);
         have_ad = false;
         btn_closeAds = findViewById(R.id.btn_closeAds);
         btn_closeAds.setOnClickListener(this);
@@ -238,7 +238,9 @@ public class Calculator extends Activity implements AdListener, OnClickListener 
             }
         }  	
         if (ads) {
-        	title_bar.removeViewAt(1);
+        	//title_bar.removeViewAt(1);
+        	adView.setVisibility(View.INVISIBLE);
+        	have_ad = true;
         }
     	
     	boolean bVoiceOn = prefs.getBoolean("voice_on", true);
@@ -295,7 +297,8 @@ public class Calculator extends Activity implements AdListener, OnClickListener 
         editor.putInt("month", c.get(Calendar.MONTH));
         editor.putInt("day",c.get(Calendar.DAY_OF_MONTH));
         editor.commit();
-        title_bar.removeViewAt(1);
+        //title_bar.removeViewAt(1);
+        adView.setVisibility(View.INVISIBLE);
     }
 
 	private Handler mUpdateAdsHandler = new Handler();
