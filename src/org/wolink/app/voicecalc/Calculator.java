@@ -75,7 +75,7 @@ public class Calculator extends Activity implements AdListener, OnClickListener 
     private SoundManager sm;
     private String mVoicePkg;
      
-//    private ViewGroup title_bar; 
+    private ViewGroup title_bar; 
     private boolean have_ad;
     private View btn_closeAds;
     private View btn_adsinfo;
@@ -103,7 +103,7 @@ public class Calculator extends Activity implements AdListener, OnClickListener 
         
         adView = (net.youmi.android.AdView)findViewById(R.id.adView);
         adView.setAdListener(this);
-//        title_bar = (ViewGroup)findViewById(R.id.title_bar);
+        title_bar = (ViewGroup)findViewById(R.id.title_bar);
         have_ad = false;
         btn_closeAds = findViewById(R.id.btn_closeAds);
         btn_closeAds.setOnClickListener(this);
@@ -123,6 +123,9 @@ public class Calculator extends Activity implements AdListener, OnClickListener 
         mPanelSwitcher.setCurrentIndex(state==null ? 0 : state.getInt(STATE_CURRENT_VIEW, 0));
 
         mListener.setHandler(mLogic, mPanelSwitcher);
+        
+        // free no ads version
+        title_bar.removeViewAt(1);
 
         //mDisplay.setOnKeyListener(mListener);
 
@@ -221,27 +224,6 @@ public class Calculator extends Activity implements AdListener, OnClickListener 
         super.onResume();
         PreferenceManager.setDefaultValues(this, R.xml.settings, false);
     	SharedPreferences prefs=PreferenceManager.getDefaultSharedPreferences(this);
-    	
-        boolean ads = prefs.getBoolean("ads", false);
-        if (ads) {
-        	int year = prefs.getInt("year", 2000);
-        	int month = prefs.getInt("month", 1);
-        	int day = prefs.getInt("day", 1);
-            final Calendar c = Calendar.getInstance();
-            int curYear = c.get(Calendar.YEAR); //获取当前年份
-            int curMonth = c.get(Calendar.MONTH);//获取当前月份
-            int curDay = c.get(Calendar.DAY_OF_MONTH);//获取当前月份的日期号码
-            if (year == curYear && month == curMonth && day == curDay){
-            	ads = true;
-            } else {
-            	ads = false;
-            }
-        }  	
-        if (ads) {
-        	//title_bar.removeViewAt(1);
-        	adView.setVisibility(View.INVISIBLE);
-        	have_ad = true;
-        }
     	
     	boolean bVoiceOn = prefs.getBoolean("voice_on", true);
     	boolean bHapticOn = prefs.getBoolean("haptic_on", true);
