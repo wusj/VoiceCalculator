@@ -43,20 +43,6 @@
 		   	android:textSize="30sp"
  		  	/>
  		  </LinearLayout> 
-		  <net.youmi.android.AdView
-		   android:id="@+id/adView"  
-		   android:layout_width="fill_parent"  
-		   android:layout_height="wrap_content"
-		   umadsdk:textColor="#ffffff" 
-		   umadsdk:backgroundTransparent="255"
-		   umadsdk:backgroundColor="#808080" 
-		   /> 
-			<View
-			android:id="@+id/btn_closeAds"
-			android:layout_width="fill_parent"
-			android:layout_height="fill_parent"
-			android:visibility="invisible"	
-			/>
  		</FrameLayout>
  		<FrameLayout 
  			android:layout_width="match_parent"
@@ -82,18 +68,6 @@
 
             </org.wolink.app.voicecalc.CalculatorDisplay>   
             </LinearLayout>    
-		<TextView 
-		    android:id="@+id/btn_adsinfo"
-			android:layout_width="match_parent"
-			android:layout_height="14px"	
-			android:gravity="center"
-			android:textSize="12px"
-			android:text="@string/ads_info"	
-			android:layout_weight="0"	
-			android:layout_alignParentBottom="true"
-			android:background="#60000000"
-			android:visibility="invisible"	
-		/>
  		</FrameLayout>
     <org.wolink.app.voicecalc.PanelSwitcher
          android:id="@+id/panelswitch"
