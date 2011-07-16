@@ -301,24 +301,24 @@ public class Calculator extends Activity {
 					}
 				} while (cursor.moveToNext());
 			} else {
-		        sm[0].addSound("1", R.raw.one, 250);
-		        sm[0].addSound("2", R.raw.two, 280);
-		        sm[0].addSound("3", R.raw.three, 350);
-		        sm[0].addSound("4", R.raw.four, 300);
-		        sm[0].addSound("5", R.raw.five, 270);
-		        sm[0].addSound("6", R.raw.six, 260);
-		        sm[0].addSound("7", R.raw.seven, 350);
-		        sm[0].addSound("8", R.raw.eight, 270);
-		        sm[0].addSound("9", R.raw.nine, 270);
-		        sm[0].addSound("0", R.raw.zero, 340);
-		        sm[0].addSound("AC", R.raw.ac, 460);
-		        sm[0].addSound("DEL", R.raw.del, 580);
-		        sm[0].addSound("+", R.raw.plus, 400);
-		        sm[0].addSound(getString(R.string.minus), R.raw.minus, 320);
-		        sm[0].addSound(getString(R.string.mul), R.raw.mul, 480);
-		        sm[0].addSound(getString(R.string.div), R.raw.div, 460);
-		        sm[0].addSound("=", R.raw.equal, 500);
-		        sm[0].addSound(".", R.raw.dot, 290);
+		        sm[0].addSound("1", R.raw.one, 320);
+		        sm[0].addSound("2", R.raw.two, 274);
+		        sm[0].addSound("3", R.raw.three, 304);
+		        sm[0].addSound("4", R.raw.four, 215);
+		        sm[0].addSound("5", R.raw.five, 388);
+		        sm[0].addSound("6", R.raw.six, 277);
+		        sm[0].addSound("7", R.raw.seven, 447);
+		        sm[0].addSound("8", R.raw.eight, 274);
+		        sm[0].addSound("9", R.raw.nine, 451);
+		        sm[0].addSound("0", R.raw.zero, 404);
+		        sm[0].addSound("AC", R.raw.ac, 696);
+		        sm[0].addSound("DEL", R.raw.del, 442);
+		        sm[0].addSound("+", R.raw.plus, 399);
+		        sm[0].addSound(getString(R.string.minus), R.raw.minus, 530);
+		        sm[0].addSound(getString(R.string.mul), R.raw.mul, 321);
+		        sm[0].addSound(getString(R.string.div), R.raw.div, 321);
+		        sm[0].addSound("=", R.raw.equal, 480);
+		        sm[0].addSound(".", R.raw.dot, 454);
 			}
 	        return null;
 		}  
