@@ -3,7 +3,7 @@
 	<classpathentry kind="con" path="com.android.ide.eclipse.adt.ANDROID_FRAMEWORK"/>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="gen"/>
-	<classpathentry kind="lib" path="libs/arity-2.1.2.jar"/>
-	<classpathentry kind="lib" path="E:/Tech/Android/SDK/UMAd_Android_SDK_2.1_2010-11-23/lib/youmiad-android.jar"/>
+	<classpathentry kind="lib" path="libs/arity-2.1.6.jar"/>
+	<classpathentry kind="lib" path="libs/youmiad-android-2.1.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
