@@ -160,7 +160,7 @@ class Logic {
         mHistory.update(getText());
     }
 
-    private static final int ROUND_DIGITS = 2;
+    private static final int ROUND_DIGITS = 8;
     String evaluate(String input) throws SyntaxException {
         if (input.trim().equals("")) {
             return "";
