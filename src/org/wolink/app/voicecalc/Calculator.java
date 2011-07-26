@@ -22,8 +22,10 @@ import java.util.List;
 import net.youmi.android.AdListener;
 import net.youmi.android.AdManager;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -43,7 +45,6 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
@@ -61,6 +62,7 @@ public class Calculator extends Activity implements AdListener, OnClickListener 
 //    private static final int CMD_ADVANCED_PANEL = 3;
     private static final int CMD_SETTINGS		  = 4;
     private static final int CMD_ABOUT			  = 5;
+    private static final int CMD_CAPITAL		  = 6;
 
     private static final int HVGA_WIDTH_PIXELS  = 320;
 
@@ -68,8 +70,7 @@ public class Calculator extends Activity implements AdListener, OnClickListener 
     static final int ADVANCED_PANEL = 1;
 
     private static final String LOG_TAG = "Calculator";
-    private static final boolean DEBUG  = false;
-    private static final boolean LOG_ENABLED = DEBUG ? Config.LOGD : Config.LOGV;
+    private static final boolean LOG_ENABLED = Config.LOGD;
     private static final String STATE_CURRENT_VIEW = "state-current-view";
 
     private SoundManager sm;
@@ -151,7 +152,10 @@ public class Calculator extends Activity implements AdListener, OnClickListener 
 //        
 //        item = menu.add(0, CMD_BASIC_PANEL, 0, R.string.basic);
 //        item.setIcon(R.drawable.simple);
-        
+
+      item = menu.add(0, CMD_CAPITAL, 0, R.string.convert_capital);
+      item.setIcon(R.drawable.currency_black_yuan);
+
       item = menu.add(0, CMD_SETTINGS, 0, R.string.setting);
       item.setIcon(R.drawable.setting);
       item.setIntent(new Intent(this, Settings.class));
@@ -159,7 +163,7 @@ public class Calculator extends Activity implements AdListener, OnClickListener 
       item = menu.add(0, CMD_ABOUT, 0, R.string.about);
       item.setIcon(R.drawable.about);
       item.setIntent(new Intent(this, About.class));
-        
+
       return true;
     }
     
@@ -198,6 +202,31 @@ public class Calculator extends Activity implements AdListener, OnClickListener 
         case CMD_SETTINGS:
         	break;
         case CMD_ABOUT:
+        	break;
+        case CMD_CAPITAL:
+        	String chineseDigit = "";
+        	try {
+        		chineseDigit = ChineseDigit.toChineseDigit(mDisplay.getText().toString());
+        	} catch (Exception e) {
+        	}
+        	
+    		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+    		builder.setTitle(R.string.RMB_CHINESE);
+    		if (chineseDigit.equals("")) {
+    			builder.setIcon(android.R.drawable.ic_dialog_alert);
+    			builder.setMessage(R.string.error_number);
+    		} else {
+        		builder.setMessage(chineseDigit);	
+    		}
+
+    		builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+    			public void onClick(DialogInterface dlg, int sumthin) {
+    				dlg.dismiss();
+    			}
+    		});
+    		
+    		builder.setCancelable(true);
+    		builder.show();
         	break;
         }
         return super.onOptionsItemSelected(item);

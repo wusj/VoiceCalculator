@@ -108,4 +108,7 @@
     <string name="download_summary">Download Package from offical website</string>
     <string name="voice_setting">Voice Package</string>
     <string name="ads_info">如果您对广告感到不适，点击关闭</string>
+    <string name="convert_capital">大写</string>
+    <string name="RMB_CHINESE">人民币大写</string>
+    <string name="error_number">数值错误！</string>
 </resources>

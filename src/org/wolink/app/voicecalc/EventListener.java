@@ -16,8 +16,6 @@
 
 package org.wolink.app.voicecalc;
 
-import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
 import android.view.HapticFeedbackConstants;
 import android.view.KeyEvent;
 import android.view.View;
