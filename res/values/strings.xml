@@ -100,7 +100,7 @@
     <string name="hapticsummary">按键时震动</string>
     <string name="app_title" formatted="false">%s v%s</string>
     <string name="about_text">Android平台适用\n\n©沃林克软件工作室\n版权所有\n\n官网：<a href="http://sw.wolink.org/">http://sw.wolink.org</a>\n</string>
-    <string name="about_note">* 本软件使用完全免费，使用过程中产生的网络流量费用由网络运营商收取。\n\n* 本版软件专为网友 曾荣民 (13407382@qq.com) 提供，不得以任何形式发布于网络，请自觉自重，谢谢配合与支持！</string>    
+    <string name="about_note">* 本软件使用完全免费，使用过程中产生的网络流量费用由网络运营商收取。\n\n* 本版软件专为网友 李烨 (893171845@qq.com) 提供，不得以任何形式发布于网络，请自觉自重，谢谢配合与支持！</string>    
     <string name="voice_pkg">Voice Package</string>
     <string name="default_voice">Default</string>
     <string name="select_voice">Select Voice Package</string>
@@ -108,4 +108,7 @@
     <string name="download_summary">Download Package from offical website</string>
     <string name="voice_setting">Voice Package</string>
     <string name="ads_info">如果您对广告感到不适，点击关闭</string>
+    <string name="convert_capital">大写</string>
+    <string name="RMB_CHINESE">人民币大写</string>
+    <string name="error_number">数值错误！</string>
 </resources>

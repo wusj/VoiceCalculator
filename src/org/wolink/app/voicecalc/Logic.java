@@ -21,8 +21,6 @@ import org.javia.arity.SyntaxException;
 import org.javia.arity.Util;
 
 import android.content.Context;
-import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
 import android.widget.Button;
 
 class Logic {
