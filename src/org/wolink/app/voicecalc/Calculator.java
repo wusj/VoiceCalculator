@@ -435,8 +435,8 @@ public class Calculator extends Activity implements AdListener, OnClickListener 
 		        sm[0].addSound("DEL", R.raw.del, 442);
 		        sm[0].addSound("+", R.raw.plus, 399);
 		        sm[0].addSound(getString(R.string.minus), R.raw.minus, 530);
-		        sm[0].addSound(getString(R.string.mul), R.raw.mul, 321);
-		        sm[0].addSound(getString(R.string.div), R.raw.div, 321);
+		        sm[0].addSound(getString(R.string.mul), R.raw.mul, 350);
+		        sm[0].addSound(getString(R.string.div), R.raw.div, 350);
 		        sm[0].addSound("=", R.raw.equal, 480);
 		        sm[0].addSound(".", R.raw.dot, 454);
 			}
