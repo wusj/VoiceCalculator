@@ -18,7 +18,6 @@ package org.wolink.app.voicecalc;
 
 import org.javia.arity.Symbols;
 import org.javia.arity.SyntaxException;
-import org.javia.arity.Util;
 
 import android.content.Context;
 import android.widget.Button;
@@ -158,7 +157,7 @@ class Logic {
         mHistory.update(getText());
     }
 
-    private static final int ROUND_DIGITS = 8;
+    private static final int ROUND_DIGITS = 1;
     String evaluate(String input) throws SyntaxException {
         if (input.trim().equals("")) {
             return "";
@@ -171,7 +170,7 @@ class Logic {
             --size;
         }
 
-        String result = Util.doubleToString(mSymbols.eval(input), mLineLength, ROUND_DIGITS);
+        String result = DoubleToString.doubleToString(mSymbols.eval(input), mLineLength, ROUND_DIGITS);
         if (result.equals(NAN)) { // treat NaN as Error
             mIsError = true;
             return mErrorString;
