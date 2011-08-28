@@ -239,13 +239,13 @@
              android:layout_height="match_parent"
              >
             <org.wolink.app.voicecalc.ColorButton
-                android:id="@+id/dot"
-                android:text="@string/dot"
+                android:id="@+id/digit0"
+                android:text="@string/digit0"
                 style="@style/button_style"
                 />
             <org.wolink.app.voicecalc.ColorButton
-                android:id="@+id/digit0"
-                android:text="@string/digit0"
+                android:id="@+id/dot"
+                android:text="@string/dot"
                 style="@style/button_style"
                 />
          </LinearLayout>
