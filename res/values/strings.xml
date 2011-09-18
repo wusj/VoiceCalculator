@@ -111,4 +111,7 @@
     <string name="convert_capital">大写</string>
     <string name="RMB_CHINESE">人民币大写</string>
     <string name="error_number">数值错误！</string>
+    <string name="others">其它选项</string>
+    <string name="remember_result">退出时保存上次运算结果</string>
+    <string name="history_on">保存历史</string>
 </resources>

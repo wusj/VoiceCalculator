@@ -32,4 +32,12 @@ android:summary="@string/hapticsummary"
 
         </PreferenceScreen>
 </PreferenceCategory>
+<PreferenceCategory android:title="@string/others">
+<CheckBoxPreference
+android:key="history_on"
+android:defaultValue="false"
+android:title="@string/history_on"
+android:summary="@string/remember_result"
+/>
+</PreferenceCategory>
 </PreferenceScreen>
