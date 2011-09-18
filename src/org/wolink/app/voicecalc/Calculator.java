@@ -73,6 +73,8 @@ public class Calculator extends Activity {
     @Override
     public void onCreate(Bundle state) {
         super.onCreate(state);
+        PreferenceManager.setDefaultValues(this, R.xml.settings, false);
+    	SharedPreferences prefs=PreferenceManager.getDefaultSharedPreferences(this);
 
     	mVoicePkg = "";
         
@@ -86,6 +88,10 @@ public class Calculator extends Activity {
 
         mDisplay = (CalculatorDisplay) findViewById(R.id.display);
 
+        boolean history_on = prefs.getBoolean("history_on", false);
+        if (!history_on) {
+        	mHistory.clear();
+        }
         mLogic = new Logic(this, mHistory, mDisplay, (Button) findViewById(R.id.equal));
         HistoryAdapter historyAdapter = new HistoryAdapter(this, mHistory, mLogic);
         mHistory.setObserver(historyAdapter);

@@ -28,8 +28,16 @@ android:summary="@string/hapticsummary"
                 android:summary="@string/download_summary">
 
             <intent android:action="android.intent.action.VIEW"
-                    android:data="http://sw.wolink.org/?p=31" />
+                    android:data="http://sw.wolink.org/download/calc_plugin.html" />
 
         </PreferenceScreen>
+</PreferenceCategory>
+<PreferenceCategory android:title="@string/others">
+<CheckBoxPreference
+android:key="history_on"
+android:defaultValue="false"
+android:title="@string/history_on"
+android:summary="@string/remember_result"
+/>
 </PreferenceCategory>
 </PreferenceScreen>
