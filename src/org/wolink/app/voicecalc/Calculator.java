@@ -38,10 +38,12 @@ import android.util.Config;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.Display;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.TextView;
 
 public class Calculator extends Activity implements AdViewListener {
@@ -92,7 +94,14 @@ public class Calculator extends Activity implements AdViewListener {
               
         setContentView(R.layout.main);
         
-        adView = (net.youmi.android.AdView)findViewById(R.id.adView);
+        
+        //初始化广告视图
+        adView = new AdView(this, 0x5A595A, 0xFFFFFFFF, 255);
+        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.FILL_PARENT, FrameLayout.LayoutParams.WRAP_CONTENT);
+        //设置广告出现的位置(悬浮于屏幕右上角)
+        params.gravity = Gravity.TOP | Gravity.RIGHT;
+        //将广告视图加入Activity中
+        addContentView(adView, params);
         adView.setAdViewListener(this);
 
         mPersist = new Persist(this);
