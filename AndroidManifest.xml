@@ -28,11 +28,15 @@
                   android:screenOrientation="portrait"
                   >
         </activity>
+        <activity android:name="net.youmi.android.AdActivity"
+				  android:configChanges="keyboard|keyboardHidden|orientation">
+		</activity>
     </application>
     
 	<uses-permission android:name="android.permission.INTERNET"></uses-permission>
 	<uses-permission android:name="android.permission.READ_PHONE_STATE"/>
 	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"></uses-permission>
 	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"></uses-permission>
+	<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"></uses-permission>
 	
 </manifest> 

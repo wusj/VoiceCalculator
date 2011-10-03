@@ -19,8 +19,9 @@ package org.wolink.app.voicecalc;
 import java.util.Calendar;
 import java.util.List;
 
-import net.youmi.android.AdListener;
 import net.youmi.android.AdManager;
+import net.youmi.android.AdView;
+import net.youmi.android.AdViewListener;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -32,7 +33,6 @@ import android.content.res.AssetFileDescriptor;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.util.Config;
 import android.util.Log;
@@ -41,12 +41,10 @@ import android.view.Display;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
 
-public class Calculator extends Activity implements AdListener, OnClickListener {
+public class Calculator extends Activity implements AdViewListener {
     EventListener mListener = new EventListener();
     private CalculatorDisplay mDisplay;
     private Persist mPersist;
@@ -54,9 +52,6 @@ public class Calculator extends Activity implements AdListener, OnClickListener 
     private Logic mLogic;
     private PanelSwitcher mPanelSwitcher;
 
-//    private static final int CMD_CLEAR_HISTORY  = 1;
-//    private static final int CMD_BASIC_PANEL    = 2;
-//    private static final int CMD_ADVANCED_PANEL = 3;
     private static final int CMD_SETTINGS		  = 4;
     private static final int CMD_ABOUT			  = 5;
     private static final int CMD_CAPITAL		  = 6;
@@ -72,26 +67,21 @@ public class Calculator extends Activity implements AdListener, OnClickListener 
 
     private SoundManager sm;
     private String mVoicePkg;
-     
-//    private ViewGroup title_bar; 
-    private boolean have_ad;
-    private View btn_closeAds;
-    private View btn_adsinfo;
+    
     private net.youmi.android.AdView adView;
+    
+    static {
+    	//第一个参数为您的应用发布Id
+    	//第二个参数为您的应用密码
+    	//第三个参数是请求广告的间隔，有效的设置值为30至200，单位为秒
+    	//第四个参数是设置测试模式，设置为true时，可以获取测试广告，正式发布请设置此参数为false
+    	AdManager.init("be8e48d9d8eebbad", "729d721df3655af8", 30, false);
+    }
     
     @Override
     public void onCreate(Bundle state) {
         super.onCreate(state);
-        
-        try{
-        	String version = this.getPackageManager().
-				getPackageInfo("org.wolink.app.voicecalc", 0).versionName;
-        	AdManager.init("be8e48d9d8eebbad", "729d721df3655af8", 30, false, version);  
-        }
-        catch (Throwable t) {
-        	
-        }
-        
+              
         PreferenceManager.setDefaultValues(this, R.xml.settings, false);
     	SharedPreferences prefs=PreferenceManager.getDefaultSharedPreferences(this);
 
@@ -103,13 +93,7 @@ public class Calculator extends Activity implements AdListener, OnClickListener 
         setContentView(R.layout.main);
         
         adView = (net.youmi.android.AdView)findViewById(R.id.adView);
-        adView.setAdListener(this);
-//        title_bar = (ViewGroup)findViewById(R.id.title_bar);
-        have_ad = false;
-        btn_closeAds = findViewById(R.id.btn_closeAds);
-        btn_closeAds.setOnClickListener(this);
-        btn_adsinfo = findViewById(R.id.btn_adsinfo);
-        btn_adsinfo.setOnClickListener(this);
+        adView.setAdViewListener(this);
 
         mPersist = new Persist(this);
         mHistory = mPersist.history;
@@ -127,35 +111,13 @@ public class Calculator extends Activity implements AdListener, OnClickListener 
         mPanelSwitcher = (PanelSwitcher) findViewById(R.id.panelswitch);
         mPanelSwitcher.setCurrentIndex(state==null ? 0 : state.getInt(STATE_CURRENT_VIEW, 0));
 
-        mListener.setHandler(mLogic, mPanelSwitcher);
-
-        //mDisplay.setOnKeyListener(mListener);
-
-//        View view;
-//        if ((view = findViewById(R.id.del)) != null) {
-//            view.setOnClickListener(mListener);
-//            view.setOnLongClickListener(mListener);
-//        }
-        /*
-        if ((view = findViewById(R.id.clear)) != null) {
-            view.setOnClickListener(mListener);
-        }
-        */        
+        mListener.setHandler(mLogic, mPanelSwitcher);       
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
         MenuItem item;
-        
-//        item = menu.add(0, CMD_CLEAR_HISTORY, 0, R.string.clear_history);
-//        item.setIcon(R.drawable.clear_history);
-//        
-//        item = menu.add(0, CMD_ADVANCED_PANEL, 0, R.string.advanced);
-//        item.setIcon(R.drawable.advanced);
-//        
-//        item = menu.add(0, CMD_BASIC_PANEL, 0, R.string.basic);
-//        item.setIcon(R.drawable.simple);
 
       item = menu.add(0, CMD_CAPITAL, 0, R.string.convert_capital);
       item.setIcon(R.drawable.currency_black_yuan);
@@ -174,35 +136,13 @@ public class Calculator extends Activity implements AdListener, OnClickListener 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
-//        menu.findItem(CMD_BASIC_PANEL).setVisible(mPanelSwitcher != null && 
-//                          mPanelSwitcher.getCurrentIndex() == ADVANCED_PANEL);
-//        
-//        menu.findItem(CMD_ADVANCED_PANEL).setVisible(mPanelSwitcher != null && 
-//                          mPanelSwitcher.getCurrentIndex() == BASIC_PANEL);
-        
+   
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-//        case CMD_CLEAR_HISTORY:
-//            mHistory.clear();
-//            break;
-//
-//        case CMD_BASIC_PANEL:
-//            if (mPanelSwitcher != null && 
-//                mPanelSwitcher.getCurrentIndex() == ADVANCED_PANEL) {
-//                mPanelSwitcher.moveRight();
-//            }
-//            break;
-//
-//        case CMD_ADVANCED_PANEL:
-//            if (mPanelSwitcher != null && 
-//                mPanelSwitcher.getCurrentIndex() == BASIC_PANEL) {
-//                mPanelSwitcher.moveLeft();
-//            }
-//            break;
         case CMD_SETTINGS:
         	break;
         case CMD_ABOUT:
@@ -270,11 +210,6 @@ public class Calculator extends Activity implements AdListener, OnClickListener 
             	ads = false;
             }
         }  	
-        if (ads) {
-        	//title_bar.removeViewAt(1);
-        	adView.setVisibility(View.INVISIBLE);
-        	have_ad = true;
-        }
     	
     	boolean bVoiceOn = prefs.getBoolean("voice_on", true);
     	boolean bHapticOn = prefs.getBoolean("haptic_on", true);
@@ -315,45 +250,6 @@ public class Calculator extends Activity implements AdListener, OnClickListener 
         int h = Math.min(display.getWidth(), display.getHeight());
         float ratio = (float)h/HVGA_WIDTH_PIXELS;
         view.setTextSize(TypedValue.COMPLEX_UNIT_PX, fontPixelSize*ratio);
-    }
-    
-    
-    public void onClick(View v) {
-    	btn_closeAds.setVisibility(View.INVISIBLE);
-    	btn_adsinfo.setVisibility(View.INVISIBLE);
-     	adView.getChildAt(0).performClick();
-        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
-        SharedPreferences.Editor editor = settings.edit();
-        editor.putBoolean("ads", true);
-        final Calendar c = Calendar.getInstance();
-        editor.putInt("year", c.get(Calendar.YEAR));
-        editor.putInt("month", c.get(Calendar.MONTH));
-        editor.putInt("day",c.get(Calendar.DAY_OF_MONTH));
-        editor.commit();
-        //title_bar.removeViewAt(1);
-        adView.setVisibility(View.INVISIBLE);
-    }
-
-	private Handler mUpdateAdsHandler = new Handler();
-	private Runnable mUpdateAdsArea = new Runnable() {
-		   public void run() {
-			   btn_closeAds.setVisibility(View.VISIBLE);
-			   btn_adsinfo.setVisibility(View.VISIBLE);
-		   }
-	};
-
-    public void onReceiveAd()
-    {
-    	if (!have_ad)
-    	{
-    		have_ad = true;
-    		mUpdateAdsHandler.post(mUpdateAdsArea);
-    	}
-    }
-    
-    // Method descriptor #3 ()V
-    public void onConnectFailed()
-    {
     }
     
     private void loadSoundTask() {
@@ -427,5 +323,17 @@ public class Calculator extends Activity implements AdListener, OnClickListener 
 	        sm.addSound("=", R.raw.equal, 480);
 	        sm.addSound(".", R.raw.dot, 454);
 		}    
-    }  
+    }
+
+	@Override
+	public void onAdViewSwitchedAd(AdView arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onConnectFailed(AdView arg0) {
+		// TODO Auto-generated method stub
+		
+	}
 }
