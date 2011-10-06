@@ -1,18 +1,28 @@
 package org.wolink.app.voicecalc;
 
+import java.util.Calendar;
 import java.util.List;
 
+import net.youmi.android.appoffers.AppOffersManager;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.pm.ProviderInfo;
 import android.os.Bundle;
+import android.preference.CheckBoxPreference;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
+import android.preference.PreferenceManager;
 import android.preference.Preference.OnPreferenceChangeListener;
 
 public class Settings extends PreferenceActivity implements OnPreferenceChangeListener{
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		
+		AppOffersManager.init(this, "be8e48d9d8eebbad", "729d721df3655af8", false);
+		
 		addPreferencesFromResource(R.xml.settings);
 		ListPreference pref = (ListPreference)findPreference("voice_pkg");
 		CharSequence voice = pref.getValue();
@@ -50,22 +60,72 @@ public class Settings extends PreferenceActivity implements OnPreferenceChangeLi
         	}
         }
         pref.setOnPreferenceChangeListener(this);
+        
+        CheckBoxPreference closeadpref = (CheckBoxPreference)findPreference("closead_on");
+        closeadpref.setOnPreferenceChangeListener(this);
 	}
 
 	@Override
 	public boolean onPreferenceChange(Preference preference, Object newValue) {
-		ListPreference pref = (ListPreference)preference;
-        CharSequence[] entries = pref.getEntries();
-        CharSequence[] entryValues = pref.getEntryValues();
-        CharSequence voice = (CharSequence)newValue;
-        
-        for (int i = 0; i < entries.length; i++) {
-        	if (voice.equals(entryValues[i])) {
-        		pref.setSummary(entries[i]);
-        		break;
-        	}
-        }
-        
+		if (preference.getKey().equals("voice_pkg")) {
+			ListPreference pref = (ListPreference)preference;
+	        CharSequence[] entries = pref.getEntries();
+	        CharSequence[] entryValues = pref.getEntryValues();
+	        CharSequence voice = (CharSequence)newValue;
+	        
+	        for (int i = 0; i < entries.length; i++) {
+	        	if (voice.equals(entryValues[i])) {
+	        		pref.setSummary(entries[i]);
+	        		break;
+	        	}
+	        }
+	        return true;
+		} else if (preference.getKey().equals("closead_on")) {
+			if ((Boolean)newValue == true) {
+		    	SharedPreferences prefs=PreferenceManager.getDefaultSharedPreferences(this);
+		        int year = prefs.getInt("year", 2000);
+		        int month = prefs.getInt("month", 1);
+		        int day = prefs.getInt("day", 1);
+		        final Calendar c = Calendar.getInstance();
+		        int curYear = c.get(Calendar.YEAR); //获取当前年份
+		        int curMonth = c.get(Calendar.MONTH);//获取当前月份
+		        int curDay = c.get(Calendar.DAY_OF_MONTH);//获取当前月份的日期号码
+		        if (year == curYear && month == curMonth && day == curDay){
+		          	return true;
+		        } 
+		        
+		        int points = AppOffersManager.getPoints(this);
+		        if (points < 15) {
+		    		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		    		builder.setTitle(R.string.point_not_enough);
+		    		builder.setIcon(android.R.drawable.ic_dialog_info);
+		    		builder.setMessage(getString(R.string.point_not_prompt, points, 15));
+		    		builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+		    			public void onClick(DialogInterface dlg, int sumthin) {
+		    				AppOffersManager.showAppOffers(Settings.this);
+		    			}
+		    		});
+		    		builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+		    			public void onClick(DialogInterface dlg, int sumthin) {
+		    				dlg.dismiss();
+		    			}
+		    		});
+		    		builder.setCancelable(true);
+		    		builder.show();
+		    		return false;
+		        } else {
+		        	AppOffersManager.spendPoints(this, 15);
+		            SharedPreferences.Editor editor = prefs.edit();
+		            editor.putInt("year", curYear);
+		            editor.putInt("month", curMonth);
+		            editor.putInt("day",curDay);
+		            editor.commit();
+		            return true;
+		        }
+			} else {
+				return true;
+			}
+		}
 		return true;
 	}	
 }

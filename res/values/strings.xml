@@ -114,4 +114,9 @@
     <string name="others">其它选项</string>
     <string name="remember_result">退出时保存上次运算结果</string>
     <string name="history_on">保存历史</string>
+    <string name="moreapp">精品应用</string>
+    <string name="closead">关闭广告</string>
+    <string name="closead_summary">关闭广告每日消耗15积分</string>
+    <string name="point_not_enough">积分不足</string>
+    <string name="point_not_prompt" formatted="false">您现在的积分是%d，关闭广告功能每日需要消耗%d积分，马上免费获取积分？</string>
 </resources>

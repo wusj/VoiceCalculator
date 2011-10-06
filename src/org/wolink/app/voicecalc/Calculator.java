@@ -22,6 +22,7 @@ import java.util.List;
 import net.youmi.android.AdManager;
 import net.youmi.android.AdView;
 import net.youmi.android.AdViewListener;
+import net.youmi.android.appoffers.AppOffersManager;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -57,6 +58,7 @@ public class Calculator extends Activity implements AdViewListener {
     private static final int CMD_SETTINGS		  = 4;
     private static final int CMD_ABOUT			  = 5;
     private static final int CMD_CAPITAL		  = 6;
+    private static final int CMD_MOREAPP		  = 7;
 
     private static final int HVGA_WIDTH_PIXELS  = 320;
 
@@ -78,31 +80,49 @@ public class Calculator extends Activity implements AdViewListener {
     	//第三个参数是请求广告的间隔，有效的设置值为30至200，单位为秒
     	//第四个参数是设置测试模式，设置为true时，可以获取测试广告，正式发布请设置此参数为false
     	AdManager.init("be8e48d9d8eebbad", "729d721df3655af8", 30, false);
-    }
+     }
     
     @Override
     public void onCreate(Bundle state) {
         super.onCreate(state);
-              
+        
+       	AppOffersManager.init(this, "be8e48d9d8eebbad", "729d721df3655af8", false);
+
         PreferenceManager.setDefaultValues(this, R.xml.settings, false);
     	SharedPreferences prefs=PreferenceManager.getDefaultSharedPreferences(this);
 
     	mVoicePkg = "";
-        
+    	
         sm = SoundManager.getInstance();
         sm.initSounds(this);
               
         setContentView(R.layout.main);
-        
-        
-        //初始化广告视图
-        adView = new AdView(this, 0x5A595A, 0xFFFFFFFF, 255);
-        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.FILL_PARENT, FrameLayout.LayoutParams.WRAP_CONTENT);
-        //设置广告出现的位置(悬浮于屏幕右上角)
-        params.gravity = Gravity.TOP | Gravity.RIGHT;
-        //将广告视图加入Activity中
-        addContentView(adView, params);
-        adView.setAdViewListener(this);
+
+        boolean closead = prefs.getBoolean("closead_on", false);
+        if (closead == true) {
+	        int year = prefs.getInt("year", 2000);
+	        int month = prefs.getInt("month", 1);
+	        int day = prefs.getInt("day", 1);
+	        final Calendar c = Calendar.getInstance();
+	        int curYear = c.get(Calendar.YEAR); //获取当前年份
+	        int curMonth = c.get(Calendar.MONTH);//获取当前月份
+	        int curDay = c.get(Calendar.DAY_OF_MONTH);//获取当前月份的日期号码
+	        if (year != curYear || month != curMonth || day != curDay){
+		        int points = AppOffersManager.getPoints(this);
+		        if (points < 15) {
+		            SharedPreferences.Editor editor = prefs.edit();
+		            editor.putBoolean("closead_on", false);
+		            editor.commit();
+		        } else {
+		        	AppOffersManager.spendPoints(this, 15);
+		            SharedPreferences.Editor editor = prefs.edit();
+		            editor.putInt("year", curYear);
+		            editor.putInt("month", curMonth);
+		            editor.putInt("day",curDay);
+		            editor.commit();
+		        }
+	        } 
+        }
 
         mPersist = new Persist(this);
         mHistory = mPersist.history;
@@ -135,10 +155,13 @@ public class Calculator extends Activity implements AdViewListener {
       item.setIcon(R.drawable.setting);
       item.setIntent(new Intent(this, Settings.class));
       
+      item = menu.add(0, CMD_MOREAPP, 0, R.string.moreapp);
+      item.setIcon(R.drawable.ic_menu_recommend);
+
       item = menu.add(0, CMD_ABOUT, 0, R.string.about);
       item.setIcon(R.drawable.about);
       item.setIntent(new Intent(this, About.class));
-
+      
       return true;
     }
     
@@ -181,6 +204,9 @@ public class Calculator extends Activity implements AdViewListener {
     		builder.setCancelable(true);
     		builder.show();
         	break;
+        case CMD_MOREAPP:
+        	AppOffersManager.showAppOffers(this);
+        	break;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -201,24 +227,27 @@ public class Calculator extends Activity implements AdViewListener {
     @Override
     public void onResume() {
         super.onResume();
-        PreferenceManager.setDefaultValues(this, R.xml.settings, false);
-    	SharedPreferences prefs=PreferenceManager.getDefaultSharedPreferences(this);
+ 
+        SharedPreferences prefs=PreferenceManager.getDefaultSharedPreferences(this);
     	
-        boolean ads = prefs.getBoolean("ads", false);
-        if (ads) {
-        	int year = prefs.getInt("year", 2000);
-        	int month = prefs.getInt("month", 1);
-        	int day = prefs.getInt("day", 1);
-            final Calendar c = Calendar.getInstance();
-            int curYear = c.get(Calendar.YEAR); //获取当前年份
-            int curMonth = c.get(Calendar.MONTH);//获取当前月份
-            int curDay = c.get(Calendar.DAY_OF_MONTH);//获取当前月份的日期号码
-            if (year == curYear && month == curMonth && day == curDay){
-            	ads = true;
-            } else {
-            	ads = false;
-            }
-        }  	
+        boolean closead = prefs.getBoolean("closead_on", false);
+        if (closead == true) {
+        	if (adView != null) {
+        		adView.removeAllViews();
+        		adView = null;
+        	}
+        } else {
+        	if (adView == null) {
+	            //初始化广告视图
+	            adView = new AdView(this, 0x5A595A, 0xFFFFFFFF, 255);
+	            FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.FILL_PARENT, FrameLayout.LayoutParams.WRAP_CONTENT);
+	            //设置广告出现的位置(悬浮于屏幕右上角)
+	            params.gravity = Gravity.TOP | Gravity.RIGHT;
+	            //将广告视图加入Activity中
+	            addContentView(adView, params);
+	            adView.setAdViewListener(this);
+        	}
+        }
     	
     	boolean bVoiceOn = prefs.getBoolean("voice_on", true);
     	boolean bHapticOn = prefs.getBoolean("haptic_on", true);

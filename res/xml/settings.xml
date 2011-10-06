@@ -34,6 +34,12 @@ android:summary="@string/hapticsummary"
 </PreferenceCategory>
 <PreferenceCategory android:title="@string/others">
 <CheckBoxPreference
+android:key="closead_on"
+android:defaultValue="false"
+android:title="@string/closead"
+android:summary="@string/closead_summary"
+/>
+<CheckBoxPreference
 android:key="history_on"
 android:defaultValue="false"
 android:title="@string/history_on"
