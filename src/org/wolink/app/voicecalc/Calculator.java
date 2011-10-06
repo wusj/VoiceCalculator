@@ -43,6 +43,7 @@ import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.TextView;
@@ -73,6 +74,7 @@ public class Calculator extends Activity implements AdViewListener {
     private String mVoicePkg;
     
     private net.youmi.android.AdView adView;
+    private FrameLayout title_bar;
     
     static {
     	//第一个参数为您的应用发布Id
@@ -97,7 +99,8 @@ public class Calculator extends Activity implements AdViewListener {
         sm.initSounds(this);
               
         setContentView(R.layout.main);
-
+        title_bar = (FrameLayout)findViewById(R.id.title_bar);
+        
         boolean closead = prefs.getBoolean("closead_on", false);
         if (closead == true) {
 	        int year = prefs.getInt("year", 2000);
@@ -232,12 +235,14 @@ public class Calculator extends Activity implements AdViewListener {
     	
         boolean closead = prefs.getBoolean("closead_on", false);
         if (closead == true) {
+           	title_bar.setVisibility(View.GONE);
         	if (adView != null) {
         		adView.removeAllViews();
         		adView = null;
         	}
         } else {
         	if (adView == null) {
+        		title_bar.setVisibility(View.VISIBLE);
 	            //初始化广告视图
 	            adView = new AdView(this, 0x5A595A, 0xFFFFFFFF, 255);
 	            FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.FILL_PARENT, FrameLayout.LayoutParams.WRAP_CONTENT);
