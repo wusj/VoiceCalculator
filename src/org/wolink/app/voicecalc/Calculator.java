@@ -32,6 +32,7 @@ import android.content.pm.PackageManager;
 import android.content.pm.ProviderInfo;
 import android.content.res.AssetFileDescriptor;
 import android.database.Cursor;
+import android.media.AudioManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -76,6 +77,8 @@ public class Calculator extends Activity implements AdViewListener {
     private net.youmi.android.AdView adView;
     private FrameLayout title_bar;
     
+    private boolean isVerifyTime;
+    
     static {
     	//第一个参数为您的应用发布Id
     	//第二个参数为您的应用密码
@@ -88,6 +91,7 @@ public class Calculator extends Activity implements AdViewListener {
     public void onCreate(Bundle state) {
         super.onCreate(state);
         
+        setVolumeControlStream(AudioManager.STREAM_MUSIC);
        	AppOffersManager.init(this, "be8e48d9d8eebbad", "729d721df3655af8", false);
 
         PreferenceManager.setDefaultValues(this, R.xml.settings, false);
@@ -102,7 +106,9 @@ public class Calculator extends Activity implements AdViewListener {
         title_bar = (FrameLayout)findViewById(R.id.title_bar);
         
         boolean closead = prefs.getBoolean("closead_on", false);
-        if (closead == true) {
+		isVerifyTime = Utils.isVerifyTime();
+		
+        if (closead == true && isVerifyTime == false) {
 	        int year = prefs.getInt("year", 2000);
 	        int month = prefs.getInt("month", 1);
 	        int day = prefs.getInt("day", 1);
@@ -111,19 +117,17 @@ public class Calculator extends Activity implements AdViewListener {
 	        int curMonth = c.get(Calendar.MONTH);//获取当前月份
 	        int curDay = c.get(Calendar.DAY_OF_MONTH);//获取当前月份的日期号码
 	        if (year != curYear || month != curMonth || day != curDay){
+		        SharedPreferences.Editor editor = prefs.edit();
 		        int points = AppOffersManager.getPoints(this);
 		        if (points < 15) {
-		            SharedPreferences.Editor editor = prefs.edit();
 		            editor.putBoolean("closead_on", false);
-		            editor.commit();
 		        } else {
 		        	AppOffersManager.spendPoints(this, 15);
-		            SharedPreferences.Editor editor = prefs.edit();
 		            editor.putInt("year", curYear);
 		            editor.putInt("month", curMonth);
 		            editor.putInt("day",curDay);
-		            editor.commit();
 		        }
+		        editor.commit();
 	        } 
         }
 
@@ -158,8 +162,10 @@ public class Calculator extends Activity implements AdViewListener {
       item.setIcon(R.drawable.setting);
       item.setIntent(new Intent(this, Settings.class));
       
-      item = menu.add(0, CMD_MOREAPP, 0, R.string.moreapp);
-      item.setIcon(R.drawable.ic_menu_recommend);
+      if (isVerifyTime == false) {
+    	  item = menu.add(0, CMD_MOREAPP, 0, R.string.moreapp);
+    	  item.setIcon(R.drawable.ic_menu_recommend);
+      }
 
       item = menu.add(0, CMD_ABOUT, 0, R.string.about);
       item.setIcon(R.drawable.about);
@@ -234,7 +240,7 @@ public class Calculator extends Activity implements AdViewListener {
         SharedPreferences prefs=PreferenceManager.getDefaultSharedPreferences(this);
     	
         boolean closead = prefs.getBoolean("closead_on", false);
-        if (closead == true) {
+        if (closead == true || isVerifyTime == true) {
            	title_bar.setVisibility(View.GONE);
         	if (adView != null) {
         		adView.removeAllViews();
@@ -361,8 +367,8 @@ public class Calculator extends Activity implements AdViewListener {
 	        sm.addSound("DEL", R.raw.del, 442);
 	        sm.addSound("+", R.raw.plus, 399);
 	        sm.addSound(getString(R.string.minus), R.raw.minus, 530);
-	        sm.addSound(getString(R.string.mul), R.raw.mul, 350);
-	        sm.addSound(getString(R.string.div), R.raw.div, 350);
+	        sm.addSound(getString(R.string.mul), R.raw.mul, 500);
+	        sm.addSound(getString(R.string.div), R.raw.div, 470);
 	        sm.addSound("=", R.raw.equal, 480);
 	        sm.addSound(".", R.raw.dot, 454);
 		}    

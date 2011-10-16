@@ -23,7 +23,11 @@ public class Settings extends PreferenceActivity implements OnPreferenceChangeLi
 		
 		AppOffersManager.init(this, "be8e48d9d8eebbad", "729d721df3655af8", false);
 		
-		addPreferencesFromResource(R.xml.settings);
+		if (Utils.isVerifyTime()) {
+			addPreferencesFromResource(R.xml.settings2);
+		} else {
+			addPreferencesFromResource(R.xml.settings);			
+		}
 		ListPreference pref = (ListPreference)findPreference("voice_pkg");
 		CharSequence voice = pref.getValue();
 		if (voice == null) {
@@ -62,7 +66,9 @@ public class Settings extends PreferenceActivity implements OnPreferenceChangeLi
         pref.setOnPreferenceChangeListener(this);
         
         CheckBoxPreference closeadpref = (CheckBoxPreference)findPreference("closead_on");
-        closeadpref.setOnPreferenceChangeListener(this);
+        if (closeadpref != null) {
+        	closeadpref.setOnPreferenceChangeListener(this);
+        }
 	}
 
 	@Override
