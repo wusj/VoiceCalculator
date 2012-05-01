@@ -22,7 +22,8 @@ import java.util.List;
 import net.youmi.android.AdManager;
 import net.youmi.android.AdView;
 import net.youmi.android.AdViewListener;
-import net.youmi.android.appoffers.AppOffersManager;
+import net.youmi.android.appoffers.YoumiOffersManager;
+import net.youmi.android.appoffers.YoumiPointsManager;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -79,20 +80,13 @@ public class Calculator extends Activity implements AdViewListener {
     
     private boolean isVerifyTime;
     
-    static {
-    	//第一个参数为您的应用发布Id
-    	//第二个参数为您的应用密码
-    	//第三个参数是请求广告的间隔，有效的设置值为30至200，单位为秒
-    	//第四个参数是设置测试模式，设置为true时，可以获取测试广告，正式发布请设置此参数为false
-    	AdManager.init("be8e48d9d8eebbad", "729d721df3655af8", 30, false);
-     }
-    
     @Override
     public void onCreate(Bundle state) {
         super.onCreate(state);
         
         setVolumeControlStream(AudioManager.STREAM_MUSIC);
-       	AppOffersManager.init(this, "be8e48d9d8eebbad", "729d721df3655af8", false);
+       	AdManager.init(this, "be8e48d9d8eebbad", "729d721df3655af8", 30, false);
+       	YoumiOffersManager.init(this, "be8e48d9d8eebbad", "729d721df3655af8");
 
         PreferenceManager.setDefaultValues(this, R.xml.settings, false);
     	SharedPreferences prefs=PreferenceManager.getDefaultSharedPreferences(this);
@@ -118,11 +112,11 @@ public class Calculator extends Activity implements AdViewListener {
 	        int curDay = c.get(Calendar.DAY_OF_MONTH);//获取当前月份的日期号码
 	        if (year != curYear || month != curMonth || day != curDay){
 		        SharedPreferences.Editor editor = prefs.edit();
-		        int points = AppOffersManager.getPoints(this);
+		        int points = YoumiPointsManager.queryPoints(this);
 		        if (points < 15) {
 		            editor.putBoolean("closead_on", false);
 		        } else {
-		        	AppOffersManager.spendPoints(this, 15);
+		        	YoumiPointsManager.spendPoints(this, 15);
 		            editor.putInt("year", curYear);
 		            editor.putInt("month", curMonth);
 		            editor.putInt("day",curDay);
@@ -214,7 +208,7 @@ public class Calculator extends Activity implements AdViewListener {
     		builder.show();
         	break;
         case CMD_MOREAPP:
-        	AppOffersManager.showAppOffers(this);
+        	YoumiOffersManager.showOffers(this, YoumiOffersManager.TYPE_REWARD_OFFERS);
         	break;
         }
         return super.onOptionsItemSelected(item);

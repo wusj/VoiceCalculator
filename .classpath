@@ -4,7 +4,7 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="gen"/>
 	<classpathentry kind="lib" path="libs/arity-2.1.6.jar"/>
-	<classpathentry kind="lib" path="libs/youmi-android-v3.03_2011-9-30.jar"/>
-	<classpathentry kind="lib" path="libs/youmi-appoffer_2011-8-29.jar"/>
-	<classpathentry kind="output" path="bin"/>
+	<classpathentry kind="lib" path="libs/youmi-android_v3.05_2011-12-30.jar"/>
+	<classpathentry kind="lib" path="libs/youmi-appoffer_v2.12_a_2012-04-17.jar"/>
+	<classpathentry kind="output" path="bin/classes"/>
 </classpath>

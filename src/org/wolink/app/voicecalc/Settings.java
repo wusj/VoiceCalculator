@@ -3,7 +3,8 @@ package org.wolink.app.voicecalc;
 import java.util.Calendar;
 import java.util.List;
 
-import net.youmi.android.appoffers.AppOffersManager;
+import net.youmi.android.appoffers.YoumiOffersManager;
+import net.youmi.android.appoffers.YoumiPointsManager;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
@@ -21,7 +22,7 @@ public class Settings extends PreferenceActivity implements OnPreferenceChangeLi
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
-		AppOffersManager.init(this, "be8e48d9d8eebbad", "729d721df3655af8", false);
+		YoumiOffersManager.init(this, "be8e48d9d8eebbad", "729d721df3655af8");
 		
 		if (Utils.isVerifyTime()) {
 			addPreferencesFromResource(R.xml.settings2);
@@ -100,7 +101,7 @@ public class Settings extends PreferenceActivity implements OnPreferenceChangeLi
 		          	return true;
 		        } 
 		        
-		        int points = AppOffersManager.getPoints(this);
+		        int points = YoumiPointsManager.queryPoints(this);
 		        if (points < 15) {
 		    		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		    		builder.setTitle(R.string.point_not_enough);
@@ -108,7 +109,7 @@ public class Settings extends PreferenceActivity implements OnPreferenceChangeLi
 		    		builder.setMessage(getString(R.string.point_not_prompt, points, 15));
 		    		builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
 		    			public void onClick(DialogInterface dlg, int sumthin) {
-		    				AppOffersManager.showAppOffers(Settings.this);
+		    				YoumiOffersManager.showOffers(Settings.this, YoumiOffersManager.TYPE_REWARD_OFFERS);
 		    			}
 		    		});
 		    		builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
@@ -120,7 +121,7 @@ public class Settings extends PreferenceActivity implements OnPreferenceChangeLi
 		    		builder.show();
 		    		return false;
 		        } else {
-		        	AppOffersManager.spendPoints(this, 15);
+		        	YoumiPointsManager.spendPoints(this, 15);
 		            SharedPreferences.Editor editor = prefs.edit();
 		            editor.putInt("year", curYear);
 		            editor.putInt("month", curMonth);

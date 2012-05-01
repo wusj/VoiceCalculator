@@ -2,8 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="org.wolink.app.voicecalc"
     android:sharedUserId="org.wolink.app.voicecalc"
-    android:versionCode="15"
-    android:versionName="1.3.1"
+    android:versionCode="16"
+    android:versionName="1.3.2"
 	>
     <original-package android:name="org.wolink.app.voicecalc" />
 
@@ -31,7 +31,7 @@
         <activity android:name="net.youmi.android.AdActivity"
 				  android:configChanges="keyboard|keyboardHidden|orientation">
 		</activity>
-		<activity android:name="net.youmi.android.appoffers.AppOffersActivity"
+		<activity android:name="net.youmi.android.appoffers.YoumiOffersActivity"
 				  android:configChanges="keyboard|keyboardHidden|orientation">
 		</activity>
     </application>
@@ -41,5 +41,6 @@
 	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"></uses-permission>
 	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"></uses-permission>
 	<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"></uses-permission>
-	
+	<uses-permission android:name="android.permission.ACCESS_WIFI_STATE"></uses-permission>
+	    	
 </manifest> 

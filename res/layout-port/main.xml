@@ -21,12 +21,12 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 			  xmlns:umadsdk="http://schemas.android.com/apk/res/org.wolink.app.voicecalc"
               android:orientation="vertical"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
+              android:layout_width="fill_parent"
+              android:layout_height="fill_parent"
               android:background="@color/frame_back">
 		<FrameLayout
  		   android:id="@+id/title_bar"
-           android:layout_width="match_parent"
+           android:layout_width="fill_parent"
            android:layout_height="48dp"
  		>
  		  <LinearLayout
@@ -45,13 +45,13 @@
  		  </LinearLayout> 
  		</FrameLayout>
  		<FrameLayout 
- 			android:layout_width="match_parent"
+ 			android:layout_width="fill_parent"
  			android:layout_height="0dp"
  			android:layout_weight="1"
  			>
  			<LinearLayout
- 			android:layout_width="match_parent"
- 			android:layout_height="match_parent"
+ 			android:layout_width="fill_parent"
+ 			android:layout_height="fill_parent"
  			android:paddingTop="6dp"
  			android:paddingBottom="4dp"
  			android:paddingLeft="4dp"
@@ -59,8 +59,8 @@
  			>
             <org.wolink.app.voicecalc.CalculatorDisplay
                  android:id="@+id/display"
-                 android:layout_width="match_parent"
-                 android:layout_height="match_parent"
+                 android:layout_width="fill_parent"
+                 android:layout_height="fill_parent"
                  android:paddingTop="4dp"
                  android:paddingRight="4dp"
                  android:background="@drawable/display"
@@ -74,21 +74,21 @@
  		</FrameLayout>
     <org.wolink.app.voicecalc.PanelSwitcher
          android:id="@+id/panelswitch"
-         android:layout_width="match_parent"
+         android:layout_width="fill_parent"
          android:layout_height="0dp"
          android:layout_weight="5"
          >
 
     <LinearLayout
          android:id="@+id/simplePad"
-         android:layout_width="match_parent"
-         android:layout_height="match_parent"
+         android:layout_width="fill_parent"
+         android:layout_height="fill_parent"
          android:orientation="vertical"
          android:layout_gravity="center"
          >
         <LinearLayout
              android:layout_weight="1"
-             android:layout_width="match_parent"
+             android:layout_width="fill_parent"
              android:layout_height="0dp">
             <org.wolink.app.voicecalc.ColorButton
                 android:id="@+id/mul"
@@ -114,7 +114,7 @@
 
         <LinearLayout
              android:layout_weight="1"
-             android:layout_width="match_parent"
+             android:layout_width="fill_parent"
              android:layout_height="0dp"
              >
             <org.wolink.app.voicecalc.ColorButton
@@ -141,18 +141,18 @@
 
         <LinearLayout
              android:layout_weight="2"
-             android:layout_width="match_parent"
+             android:layout_width="fill_parent"
              android:layout_height="0dp"
              >
         <LinearLayout
              android:layout_weight="3"
              android:layout_width="0dp"
-             android:layout_height="match_parent"
+             android:layout_height="fill_parent"
              android:orientation="vertical"
              >
         <LinearLayout
              android:layout_weight="1"
-             android:layout_width="match_parent"
+             android:layout_width="fill_parent"
              android:layout_height="0dp"
              >            <org.wolink.app.voicecalc.ColorButton
                 android:id="@+id/digit4"
@@ -173,7 +173,7 @@
 
         <LinearLayout
              android:layout_weight="1"
-             android:layout_width="match_parent"
+             android:layout_width="fill_parent"
              android:layout_height="0dp"
              >
             <org.wolink.app.voicecalc.ColorButton
@@ -196,7 +196,7 @@
         <LinearLayout
              android:layout_weight="1"
              android:layout_width="0dp"
-             android:layout_height="match_parent"
+             android:layout_height="fill_parent"
              >        
             <org.wolink.app.voicecalc.ColorButton
                 android:id="@+id/plus"
@@ -207,13 +207,13 @@
         </LinearLayout>
         <LinearLayout
              android:layout_weight="1"
-             android:layout_width="match_parent"
+             android:layout_width="fill_parent"
              android:layout_height="0dp"
              >
         <LinearLayout
              android:layout_weight="1"
              android:layout_width="0dp"
-             android:layout_height="match_parent"
+             android:layout_height="fill_parent"
              >
             <org.wolink.app.voicecalc.ColorButton
                 android:id="@+id/digit0"
@@ -229,7 +229,7 @@
          <LinearLayout
              android:layout_weight="1"
              android:layout_width="0dp"
-             android:layout_height="match_parent"
+             android:layout_height="fill_parent"
              >
             <org.wolink.app.voicecalc.ColorButton
                 android:id="@+id/equal"
