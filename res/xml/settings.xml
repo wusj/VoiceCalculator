@@ -28,7 +28,7 @@ android:summary="@string/hapticsummary"
                 android:summary="@string/download_summary">
 
             <intent android:action="android.intent.action.VIEW"
-                    android:data="http://sw.wolink.org/download/calc_plugin.html" />
+                    android:data="http://swwolink.sinaapp.com" />
 
         </PreferenceScreen>
 </PreferenceCategory>
