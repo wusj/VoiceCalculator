@@ -16,14 +16,9 @@
 
 package org.wolink.app.voicecalc;
 
-import java.util.Calendar;
 import java.util.List;
 
-import net.youmi.android.AdManager;
-import net.youmi.android.AdView;
-import net.youmi.android.AdViewListener;
 import net.youmi.android.appoffers.YoumiOffersManager;
-import net.youmi.android.appoffers.YoumiPointsManager;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -41,16 +36,13 @@ import android.util.Config;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.Display;
-import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.Button;
-import android.widget.FrameLayout;
 import android.widget.TextView;
 
-public class Calculator extends Activity implements AdViewListener {
+public class Calculator extends Activity {
     EventListener mListener = new EventListener();
     private CalculatorDisplay mDisplay;
     private Persist mPersist;
@@ -75,9 +67,6 @@ public class Calculator extends Activity implements AdViewListener {
     private SoundManager sm;
     private String mVoicePkg;
     
-    private net.youmi.android.AdView adView;
-    private FrameLayout title_bar;
-    
     private boolean isVerifyTime;
     
     @Override
@@ -85,55 +74,25 @@ public class Calculator extends Activity implements AdViewListener {
         super.onCreate(state);
         
         setVolumeControlStream(AudioManager.STREAM_MUSIC);
-       	AdManager.init(this, "be8e48d9d8eebbad", "729d721df3655af8", 30, false);
        	YoumiOffersManager.init(this, "be8e48d9d8eebbad", "729d721df3655af8");
 
         PreferenceManager.setDefaultValues(this, R.xml.settings, false);
-    	SharedPreferences prefs=PreferenceManager.getDefaultSharedPreferences(this);
-
+ 
     	mVoicePkg = "";
     	
         sm = SoundManager.getInstance();
         sm.initSounds(this);
               
         setContentView(R.layout.main);
-        title_bar = (FrameLayout)findViewById(R.id.title_bar);
         
-        boolean closead = prefs.getBoolean("closead_on", false);
 		isVerifyTime = Utils.isVerifyTime();
-		
-        if (closead == true && isVerifyTime == false) {
-	        int year = prefs.getInt("year", 2000);
-	        int month = prefs.getInt("month", 1);
-	        int day = prefs.getInt("day", 1);
-	        final Calendar c = Calendar.getInstance();
-	        int curYear = c.get(Calendar.YEAR); //获取当前年份
-	        int curMonth = c.get(Calendar.MONTH);//获取当前月份
-	        int curDay = c.get(Calendar.DAY_OF_MONTH);//获取当前月份的日期号码
-	        if (year != curYear || month != curMonth || day != curDay){
-		        SharedPreferences.Editor editor = prefs.edit();
-		        int points = YoumiPointsManager.queryPoints(this);
-		        if (points < 15) {
-		            editor.putBoolean("closead_on", false);
-		        } else {
-		        	YoumiPointsManager.spendPoints(this, 15);
-		            editor.putInt("year", curYear);
-		            editor.putInt("month", curMonth);
-		            editor.putInt("day",curDay);
-		        }
-		        editor.commit();
-	        } 
-        }
 
         mPersist = new Persist(this);
         mHistory = mPersist.history;
 
         mDisplay = (CalculatorDisplay) findViewById(R.id.display);
 
-        boolean history_on = prefs.getBoolean("history_on", false);
-        if (!history_on) {
-        	mHistory.clear();
-        }
+        mHistory.clear();
         mLogic = new Logic(this, mHistory, mDisplay, (Button) findViewById(R.id.equal));
         HistoryAdapter historyAdapter = new HistoryAdapter(this, mHistory, mLogic);
         mHistory.setObserver(historyAdapter);
@@ -208,7 +167,7 @@ public class Calculator extends Activity implements AdViewListener {
     		builder.show();
         	break;
         case CMD_MOREAPP:
-        	YoumiOffersManager.showOffers(this, YoumiOffersManager.TYPE_REWARD_OFFERS);
+        	YoumiOffersManager.showOffers(this, YoumiOffersManager.TYPE_REWARDLESS_APPLIST);
         	break;
         }
         return super.onOptionsItemSelected(item);
@@ -232,27 +191,6 @@ public class Calculator extends Activity implements AdViewListener {
         super.onResume();
  
         SharedPreferences prefs=PreferenceManager.getDefaultSharedPreferences(this);
-    	
-        boolean closead = prefs.getBoolean("closead_on", false);
-        if (closead == true || isVerifyTime == true) {
-           	title_bar.setVisibility(View.GONE);
-        	if (adView != null) {
-        		adView.removeAllViews();
-        		adView = null;
-        	}
-        } else {
-        	if (adView == null) {
-        		title_bar.setVisibility(View.VISIBLE);
-	            //初始化广告视图
-	            adView = new AdView(this, 0x5A595A, 0xFFFFFFFF, 255);
-	            FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.FILL_PARENT, FrameLayout.LayoutParams.WRAP_CONTENT);
-	            //设置广告出现的位置(悬浮于屏幕右上角)
-	            params.gravity = Gravity.TOP | Gravity.RIGHT;
-	            //将广告视图加入Activity中
-	            addContentView(adView, params);
-	            adView.setAdViewListener(this);
-        	}
-        }
     	
     	boolean bVoiceOn = prefs.getBoolean("voice_on", true);
     	boolean bHapticOn = prefs.getBoolean("haptic_on", true);
@@ -367,16 +305,4 @@ public class Calculator extends Activity implements AdViewListener {
 	        sm.addSound(".", R.raw.dot, 454);
 		}    
     }
-
-	@Override
-	public void onAdViewSwitchedAd(AdView arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void onConnectFailed(AdView arg0) {
-		// TODO Auto-generated method stub
-		
-	}
 }
