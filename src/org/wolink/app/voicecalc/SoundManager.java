@@ -39,27 +39,9 @@ public class SoundManager {
     private final class Sound {
     	public int id;
     	public int time;
-    	public int soundId;
-    	public AssetFileDescriptor afd;
-    	public boolean isLoad;
-   	    public boolean isDefault;
-    	
     	public Sound(int soundId, int time) {
-    		this.id = -1;
+    		this.id = soundId;
     		this.time = time;
-    		this.isLoad = false;
-    		this.isDefault = true;
-    		this.afd = null;
-    		this.soundId = soundId;
-    	}
-    	
-    	public Sound(AssetFileDescriptor afd, int time) {
-    		this.id = -1;
-    		this.time = time;
-    		this.isLoad = false;
-    		this.isDefault = false;
-    		this.afd = afd;
-    		this.soundId = -1;    		
     	}
     }
     /**
@@ -86,7 +68,7 @@ public class SoundManager {
      */
 
     public void addSound(String key, int SoundID, int time) {
-    	Sound sound = new Sound(SoundID, time);
+    	Sound sound = new Sound(mSoundPool.load(mContext, SoundID, 1), time);
         mSoundPoolMap.put(key, sound);
     }
     
@@ -96,7 +78,7 @@ public class SoundManager {
      * @param afd  the file store in the asset
      */
     public void addSound(String key, AssetFileDescriptor afd, int time) {
-    	Sound sound = new Sound(afd, time);
+    	Sound sound = new Sound(mSoundPool.load(afd, 1), time);
         mSoundPoolMap.put(key, sound);
     }
    
@@ -159,23 +141,11 @@ public class SoundManager {
 	    	String key = mSoundQueue.remove(0);
 	    	Sound sound = mSoundPoolMap.get(key);
 	    	if (sound != null) {
-	    		if (!sound.isLoad) {
-	    			if (sound.isDefault) {
-	    				sound.id = mSoundPool.load(mContext, sound.soundId, 1);
-	    			} else {
-	    				sound.id = mSoundPool.load(sound.afd, 1);
-	    			}
-	    			sound.isLoad = true;
-	    		}
-	    		
 		        float streamVolume = 0.0f;
 		        streamVolume = mAudioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
 		        streamVolume /= mAudioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
 		        
-		        do {
-		        	curStreamId = mSoundPool.play(sound.id, streamVolume, streamVolume, 1, 0, 1.0f); 
-		        } while (curStreamId == 0);
-		        
+		        curStreamId = mSoundPool.play(sound.id, streamVolume, streamVolume, 1, 0, 1.0f); 
 		        mPlaying = true;
 		        mHandler.postDelayed(mPlayNext, sound.time);
 	    	}
