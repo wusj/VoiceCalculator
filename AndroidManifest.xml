@@ -31,6 +31,20 @@
 		<activity android:name="net.youmi.android.appoffers.YoumiOffersActivity"
 				  android:configChanges="keyboard|keyboardHidden|orientation">
 		</activity>
+		
+		<activity android:name="com.umeng.fb.ui.SendFeedback"
+    				android:windowSoftInputMode="adjustResize" />
+		<activity android:name="com.umeng.fb.ui.FeedbackConversations" />
+		<activity android:name="com.umeng.fb.ui.FeedbackConversation"
+    				android:configChanges="keyboard" />
+		<service android:name="com.umeng.common.net.DownloadingService"
+					android:exported="true"
+					android:process=":DownloadingService" >
+		</service>
+		
+		<meta-data android:value="500279a85270157a2f0000ef" android:name="UMENG_APPKEY"></meta-data>
+		<meta-data android:value="default" android:name="UMENG_CHANNEL"></meta-data>
+		
     </application>
     
 	<uses-permission android:name="android.permission.INTERNET"></uses-permission>
@@ -39,6 +53,7 @@
 	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"></uses-permission>
 	<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"></uses-permission>
 	<uses-permission android:name="android.permission.ACCESS_WIFI_STATE"></uses-permission>
+	<uses-permission android:name="android.permission.READ_LOGS"></uses-permission>
 	<uses-permission android:name="com.android.launcher.permission.INSTALL_SHORTCUT"></uses-permission>
 	<uses-permission android:name="com.android.browser.permission.WRITE_HISTORY_BOOKMARKS"></uses-permission>
 		    	

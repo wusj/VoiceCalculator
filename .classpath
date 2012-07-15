@@ -5,5 +5,6 @@
 	<classpathentry kind="src" path="gen"/>
 	<classpathentry kind="lib" path="libs/arity-2.1.6.jar"/>
 	<classpathentry kind="lib" path="E:/development/Android/Calculator/libs/youmi-appoffer_v2.13_a_2012-05-25.jar"/>
+	<classpathentry kind="lib" path="E:/development/Android/Calculator/libs/umeng_sdk_20120619.jar"/>
 	<classpathentry kind="output" path="bin/classes"/>
 </classpath>

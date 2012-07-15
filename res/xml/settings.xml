@@ -15,4 +15,19 @@ android:title="@string/haptic"
 android:summary="@string/hapticsummary"
 />
 </PreferenceCategory>
+<PreferenceCategory android:title="@string/suggestions">
+<Preference
+    android:key="fb_bug"
+    android:title="@string/fb_bug"
+    android:summary="@string/fb_summary"
+>
+</Preference>
+<Preference
+     android:title="@string/officalsite"
+     android:summary="http://sw.wolinke.com"
+>
+     <intent android:action="android.intent.action.VIEW"
+             android:data="http://sw.wolinke.com" />
+</Preference>
+-</PreferenceCategory>
 </PreferenceScreen>

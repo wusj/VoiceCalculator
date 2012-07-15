@@ -45,6 +45,11 @@ import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.umeng.analytics.MobclickAgent;
+import com.umeng.fb.NotificationType;
+import com.umeng.fb.UMFeedbackService;
+import com.umeng.update.UmengUpdateAgent;
+
 public class Calculator extends Activity {
     EventListener mListener = new EventListener();
     private CalculatorDisplay mDisplay;
@@ -69,9 +74,7 @@ public class Calculator extends Activity {
 
     private SoundManager sm;
     private String mVoicePkg;
-    
-    private boolean isVerifyTime;
-    
+       
     @Override
     public void onCreate(Bundle state) {
         super.onCreate(state);
@@ -87,8 +90,6 @@ public class Calculator extends Activity {
         sm.initSounds(this);
               
         setContentView(R.layout.main);
-        
-		isVerifyTime = Utils.isVerifyTime();
 
         mPersist = new Persist(this);
         mHistory = mPersist.history;
@@ -103,7 +104,12 @@ public class Calculator extends Activity {
         mPanelSwitcher = (PanelSwitcher) findViewById(R.id.panelswitch);
         mPanelSwitcher.setCurrentIndex(state==null ? 0 : state.getInt(STATE_CURRENT_VIEW, 0));
 
-        mListener.setHandler(mLogic, mPanelSwitcher);       
+        mListener.setHandler(mLogic, mPanelSwitcher);    
+        
+        MobclickAgent.onError(this);
+        MobclickAgent.updateOnlineConfig(this);
+        UMFeedbackService.enableNewReplyNotification(this, NotificationType.AlertDialog);
+        UmengUpdateAgent.update(this);
     }
 
     @Override
@@ -118,7 +124,7 @@ public class Calculator extends Activity {
       item.setIcon(R.drawable.setting);
       item.setIntent(new Intent(this, Settings.class));
       
-      if (isVerifyTime == false) {
+      if (MobclickAgent.getConfigParams(this, "OpenMoreApp").equalsIgnoreCase("1")) {
     	  item = menu.add(0, CMD_MOREAPP, 0, R.string.moreapp);
     	  item.setIcon(R.drawable.ic_menu_recommend);
       }
@@ -187,6 +193,7 @@ public class Calculator extends Activity {
         super.onPause();
         mLogic.updateHistory();
         mPersist.save();
+        MobclickAgent.onPause(this);
     }
     
     @Override
@@ -204,6 +211,7 @@ public class Calculator extends Activity {
     		mVoicePkg = pkg;
     		new SoundLoadTask(this).execute(sm);
     	}
+    	MobclickAgent.onResume(this);
     }
     
     @Override

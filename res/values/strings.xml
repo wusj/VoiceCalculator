@@ -119,4 +119,8 @@
     <string name="closead_summary">关闭广告每日消耗15积分</string>
     <string name="point_not_enough">积分不足</string>
     <string name="point_not_prompt" formatted="false">您现在的积分是%d，关闭广告功能每日需要消耗%d积分，马上免费获取积分？</string>
+    <string name="suggestions">意见或建议</string>
+    <string name="officalsite">官方网站</string>
+    <string name="fb_bug">反馈问题</string>
+    <string name="fb_summary">直接提交您的建议或意见</string>
 </resources>
