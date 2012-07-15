@@ -2,8 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="org.wolink.app.voicecalc"
     android:sharedUserId="org.wolink.app.voicecalc"
-    android:versionCode="16"
-    android:versionName="1.3.2"
+    android:versionCode="20"
+    android:versionName="1.4.0"
 	>
     <original-package android:name="org.wolink.app.voicecalc" />
 
