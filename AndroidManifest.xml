@@ -5,7 +5,6 @@
     android:versionCode="20"
     android:versionName="1.4.0"
 	>
-    <original-package android:name="org.wolink.app.voicecalc" />
 
     <application android:label="@string/app_name" android:icon="@drawable/icon"
     	android:process="org.wolink.app.voicecalc"
@@ -43,10 +42,13 @@
 		</service>
 		
 		<meta-data android:value="500279a85270157a2f0000ef" android:name="UMENG_APPKEY"></meta-data>
-		<meta-data android:value="default" android:name="UMENG_CHANNEL"></meta-data>
+		<meta-data android:value="hiapk" android:name="UMENG_CHANNEL"></meta-data>
+		<meta-data android:name="YOUMI_CHANNEL" android:value="10030"></meta-data>
 		
     </application>
     
+ 	<uses-sdk android:minSdkVersion="7"/>
+        
 	<uses-permission android:name="android.permission.INTERNET"></uses-permission>
 	<uses-permission android:name="android.permission.READ_PHONE_STATE"/>
 	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"></uses-permission>
