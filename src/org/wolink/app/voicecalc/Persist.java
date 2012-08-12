@@ -65,6 +65,8 @@ class Persist {
             out.close();
         } catch (IOException e) {
             Calculator.log("" + e);
-        } 
+        } catch (NullPointerException e) {
+        	Calculator.log("" + e);
+        }
     }
 }

@@ -16,22 +16,15 @@
 
 package org.wolink.app.voicecalc;
 
-import java.util.List;
-
 import net.youmi.android.appoffers.YoumiOffersManager;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
-import android.content.pm.ProviderInfo;
-import android.content.res.AssetFileDescriptor;
-import android.database.Cursor;
 import android.media.AudioManager;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -62,6 +55,8 @@ public class Calculator extends Activity {
     private static final int CMD_ABOUT			  = 5;
     private static final int CMD_CAPITAL		  = 6;
     private static final int CMD_MOREAPP		  = 7;
+    
+    private static final int DIALOG_LOADING_VOICEPKG = 1;
 
     private static final int HVGA_WIDTH_PIXELS  = 480;
 
@@ -74,6 +69,7 @@ public class Calculator extends Activity {
 
     private SoundManager sm;
     private String mVoicePkg;
+    private SoundLoadTask mLoadingTask;
        
     @Override
     public void onCreate(Bundle state) {
@@ -185,7 +181,7 @@ public class Calculator extends Activity {
     @Override
     protected void onSaveInstanceState(Bundle state) {
         super.onSaveInstanceState(state);
-        state.putInt(STATE_CURRENT_VIEW, mPanelSwitcher.getCurrentIndex());
+        state.putInt(STATE_CURRENT_VIEW, mPanelSwitcher.getCurrentIndex());     
     }
 
     @Override
@@ -209,10 +205,19 @@ public class Calculator extends Activity {
     	mListener.mbHaptic = bHapticOn;
     	if (bVoiceOn && !pkg.equals(mVoicePkg)) {
     		mVoicePkg = pkg;
-    		new SoundLoadTask(this).execute(sm);
+    		mLoadingTask = ( SoundLoadTask ) new SoundLoadTask().execute(sm);
     	}
     	MobclickAgent.onResume(this);
     }
+    
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (mLoadingTask != null && mLoadingTask.getStatus() == AsyncTask.Status.RUNNING) {
+        	mLoadingTask.cancel(true);
+        	mLoadingTask = null;
+        }
+    }    
     
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent keyEvent) {
@@ -244,100 +249,69 @@ public class Calculator extends Activity {
         view.setTextSize(TypedValue.COMPLEX_UNIT_PX, fontPixelSize*ratio);
     }
     
+    @Override
+    protected Dialog onCreateDialog(int id) {
+    	switch (id) {
+    		case DIALOG_LOADING_VOICEPKG:
+    			ProgressDialog dialog = new ProgressDialog(this);
+    			dialog.setMessage(getString(R.string.loadingvoice));
+    			dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+    			dialog.setCancelable(false);
+    			
+    			return dialog;
+  
+    	}
+    	return null;
+	}
+    
 	class SoundLoadTask extends AsyncTask<SoundManager, Void, Void> {  
-		ProgressDialog dialog;
-		Calculator context;
-		
-		SoundLoadTask(Context context) {
+		SoundLoadTask() {
 			super();
-			this.context = (Calculator)context;
 		}
 		
 		@Override  
 		protected void onPreExecute() {  
-			dialog = ProgressDialog.show(context, "", 
-					context.getString(R.string.loadingvoice), true);
-			dialog.setCancelable(false);
+			showDialog(DIALOG_LOADING_VOICEPKG);
 		}  		
 		
 		@Override
 		protected Void doInBackground(SoundManager... sm) { 
 			sm[0].unloadAll();
-	        PackageManager pm = getPackageManager();
-	        List<ProviderInfo> list = null;
-	        if (!context.mVoicePkg.equals("default")) { 
-	        	list = pm.queryContentProviders("org.wolink.app.voicecalc", 
-	        		context.getApplicationInfo().uid, 0);
-	        }
-	        
-	        Cursor cursor = null;
-	        String pkgName = null;
-	        if (list != null) {        
-		        String authority = null;
-		        
-		        for (int i = 0; i < list.size(); i++) {
-		        	ProviderInfo info = list.get(i);
-		        	if (context.mVoicePkg.equals(info.authority)) {
-		        		pkgName = info.packageName;
-		        		authority = info.authority;
-		        	}
-		        }
-		        
-		        if (authority != null) {
-		        	cursor = ((Activity)context).managedQuery(
-						Uri.parse("content://" + authority + "/voices"), 
-						null, null, null, null);
-		        }
-	        }
 			
-			if (cursor != null && cursor.moveToFirst()) {
-				int keyColumn = cursor.getColumnIndex("key");
-				int resIdColumn = cursor.getColumnIndex("resId");
-				int timeColumn = cursor.getColumnIndex("time");
-				String key;
-				int resId;
-				int time;
-				do {
-					key = cursor.getString(keyColumn);
-					resId = cursor.getInt(resIdColumn);
-					time = cursor.getInt(timeColumn);
-					try {
-						AssetFileDescriptor afd = context.getContentResolver().openAssetFileDescriptor(
-							Uri.parse("android.resource://" + pkgName + "/" + resId),
-							"r"
-							);
-						sm[0].addSound(key, afd, time);
-					}
-					catch (Throwable t) {
-						// Nothing
-					}
-				} while (cursor.moveToNext());
-			} else {
-		        sm[0].addSound("1", R.raw.one, 320);
-		        sm[0].addSound("2", R.raw.two, 274);
-		        sm[0].addSound("3", R.raw.three, 304);
-		        sm[0].addSound("4", R.raw.four, 215);
-		        sm[0].addSound("5", R.raw.five, 388);
-		        sm[0].addSound("6", R.raw.six, 277);
-		        sm[0].addSound("7", R.raw.seven, 447);
-		        sm[0].addSound("8", R.raw.eight, 274);
-		        sm[0].addSound("9", R.raw.nine, 451);
-		        sm[0].addSound("0", R.raw.zero, 404);
-		        sm[0].addSound("AC", R.raw.ac, 696);
-		        sm[0].addSound("DEL", R.raw.del, 442);
-		        sm[0].addSound("+", R.raw.plus, 399);
-		        sm[0].addSound(getString(R.string.minus), R.raw.minus, 530);
-		        sm[0].addSound(getString(R.string.mul), R.raw.mul, 321);
-		        sm[0].addSound(getString(R.string.div), R.raw.div, 321);
-		        sm[0].addSound("=", R.raw.equal, 480);
-		        sm[0].addSound(".", R.raw.dot, 454);
-			}
+		    sm[0].addSound("1", R.raw.one, 320);
+		    sm[0].addSound("2", R.raw.two, 274);
+		    sm[0].addSound("3", R.raw.three, 304);
+		    sm[0].addSound("4", R.raw.four, 215);
+		    sm[0].addSound("5", R.raw.five, 388);
+		    sm[0].addSound("6", R.raw.six, 277);
+		    sm[0].addSound("7", R.raw.seven, 447);
+		    sm[0].addSound("8", R.raw.eight, 274);
+		    sm[0].addSound("9", R.raw.nine, 451);
+		    sm[0].addSound("0", R.raw.zero, 404);
+		    sm[0].addSound("AC", R.raw.ac, 696);
+		    sm[0].addSound("DEL", R.raw.del, 442);
+		    sm[0].addSound("+", R.raw.plus, 399);
+		    sm[0].addSound(getString(R.string.minus), R.raw.minus, 530);
+		    sm[0].addSound(getString(R.string.mul), R.raw.mul, 321);
+		    sm[0].addSound(getString(R.string.div), R.raw.div, 321);
+		    sm[0].addSound("=", R.raw.equal, 480);
+		    sm[0].addSound(".", R.raw.dot, 454);
+		        
 	        return null;
 		}  
 		
+        @Override
+        public void onCancelled() {
+        	try {
+        		dismissDialog(DIALOG_LOADING_VOICEPKG);
+        	} catch (Exception e) {
+        		log("" + e);
+        	}
+        }	
+        
 		@Override  
 		protected void onPostExecute(Void n) {  
-			dialog.dismiss();
+			dismissDialog(DIALOG_LOADING_VOICEPKG);
 		} 
 	}  
 }
