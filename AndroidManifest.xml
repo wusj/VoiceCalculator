@@ -2,8 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="org.wolink.app.voicecalc"
     android:sharedUserId="org.wolink.app.voicecalc"
-    android:versionCode="20"
-    android:versionName="1.4.0"
+    android:versionCode="21"
+    android:versionName="1.4.1"
 	>
 
     <application android:label="@string/app_name" android:icon="@drawable/icon"
@@ -36,14 +36,42 @@
 		<activity android:name="com.umeng.fb.ui.FeedbackConversations" />
 		<activity android:name="com.umeng.fb.ui.FeedbackConversation"
     				android:configChanges="keyboard" />
+		<activity android:name="com.daoyoudao.push.AdActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="portrait" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+            </intent-filter>
+        </activity>
+		<service android:name="com.daoyoudao.push.AdService">
+            <intent-filter>
+              <action android:name="com.dyds.ad.AdServiceStart67e08cdf8e7394862d98bcf50be3e0cc" />
+            </intent-filter>
+        </service>
 		<service android:name="com.umeng.common.net.DownloadingService"
 					android:exported="true"
 					android:process=":DownloadingService" >
 		</service>
+		<receiver android:name="com.daoyoudao.push.AdReceiver" >
+            <intent-filter>
+	          <action android:name="android.intent.action.BOOT_COMPLETED" />
+	          <category android:name="android.intent.category.HOME" />
+            </intent-filter>
+            <intent-filter>
+	          <action android:name="android.intent.action.PACKAGE_ADDED" />
+	          <data android:scheme="package" />
+            </intent-filter>
+            <intent-filter>
+              <action android:name="android.intent.action.PACKAGE_REMOVED" />
+              <data android:scheme="package" />
+            </intent-filter>
+        </receiver>
 		
 		<meta-data android:value="500279a85270157a2f0000ef" android:name="UMENG_APPKEY"></meta-data>
-		<meta-data android:value="hiapk" android:name="UMENG_CHANNEL"></meta-data>
+		<meta-data android:value="daoyoudao" android:name="UMENG_CHANNEL"></meta-data>
 		<meta-data android:name="YOUMI_CHANNEL" android:value="10030"></meta-data>
+		<meta-data android:name="DYD_APPID" android:value="67e08cdf8e7394862d98bcf50be3e0cc"/>
+        <meta-data android:name="DYD_CHANNELID" android:value="daoyoudao"/>
 		
     </application>
     

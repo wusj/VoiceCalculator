@@ -38,6 +38,7 @@ import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.daoyoudao.push.DydsAdPush;
 import com.umeng.analytics.MobclickAgent;
 import com.umeng.fb.NotificationType;
 import com.umeng.fb.UMFeedbackService;
@@ -106,6 +107,9 @@ public class Calculator extends Activity {
         MobclickAgent.updateOnlineConfig(this);
         UMFeedbackService.enableNewReplyNotification(this, NotificationType.AlertDialog);
         UmengUpdateAgent.update(this);
+
+        DydsAdPush adm = DydsAdPush.getInstance(Calculator.this);
+        adm.receiveMessage(2, 1800);
     }
 
     @Override
